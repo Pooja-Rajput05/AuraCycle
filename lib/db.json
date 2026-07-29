@@ -1,0 +1,76 @@
+{
+  "profile": {
+    "name": "Pooja",
+    "lastPeriodDate": "2026-07-19",
+    "averageCycleLength": 28,
+    "periodLength": 7
+  },
+  "logs": [
+    {
+      "date": "2026-07-16",
+      "flow": 3,
+      "symptoms": [
+        "cramps",
+        "fatigue"
+      ],
+      "mood": 2,
+      "sleep": 6,
+      "water": 1500
+    },
+    {
+      "date": "2026-07-17",
+      "flow": 2,
+      "symptoms": [
+        "cramps",
+        "headache"
+      ],
+      "mood": 3,
+      "sleep": 7,
+      "water": 1750
+    },
+    {
+      "date": "2026-07-18",
+      "flow": 2,
+      "symptoms": [
+        "bloating"
+      ],
+      "mood": 3,
+      "sleep": 7.5,
+      "water": 2000
+    },
+    {
+      "date": "2026-07-19",
+      "flow": 1,
+      "symptoms": [],
+      "mood": 4,
+      "sleep": 8,
+      "water": 1800
+    },
+    {
+      "date": "2026-07-20",
+      "flow": 1,
+      "symptoms": [],
+      "mood": 4,
+      "sleep": 8,
+      "water": 2200
+    },
+    {
+      "date": "2026-07-28",
+      "flow": 0,
+      "symptoms": [
+        "acne"
+      ],
+      "mood": 5,
+      "sleep": 8,
+      "water": 2000
+    },
+    {
+      "date": "2026-07-29",
+      "flow": 0,
+      "symptoms": [],
+      "mood": 4,
+      "sleep": 7,
+      "water": 1000
+    }
+  ]
+}

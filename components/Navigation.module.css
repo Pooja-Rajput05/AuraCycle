@@ -1,0 +1,139 @@
+.header {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 560px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(232, 165, 152, 0.22);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(135, 100, 110, 0.06);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  transition: all 0.3s ease;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logoMark {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-rose) 0%, var(--accent-pink) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(232, 165, 152, 0.2);
+}
+
+.innerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.appName {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+.nav {
+  display: flex;
+  gap: 4px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 10px;
+  border-radius: 12px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.navItem:hover {
+  color: var(--accent-rose);
+  background: rgba(232, 165, 152, 0.06);
+}
+
+.active {
+  color: var(--accent-rose);
+  background: rgba(232, 165, 152, 0.1);
+}
+
+.icon {
+  transition: transform 0.2s ease;
+}
+
+.active .icon {
+  transform: scale(1.1);
+}
+
+.label {
+  display: none; /* Hide text on narrow viewports/mobile */
+}
+
+@media (min-width: 480px) {
+  .label {
+    display: inline; /* Show text on medium/desktop viewports */
+  }
+}
+
+.activeDot {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent-rose);
+  display: none; /* hidden if text is visible, but we can keep it clean */
+}
+
+.themeToggle {
+  background: rgba(232, 165, 152, 0.08);
+  border: 1px solid rgba(232, 165, 152, 0.2);
+  color: var(--text-secondary);
+  border-radius: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: all 0.2s ease;
+}
+
+.themeToggle:hover {
+  background: rgba(232, 165, 152, 0.15);
+  color: var(--accent-rose);
+  transform: rotate(15deg) scale(1.05);
+}
