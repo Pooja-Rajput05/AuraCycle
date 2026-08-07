@@ -11,11 +11,12 @@ const JWT_SECRET = process.env.JWT_SECRET || 'auracycle_secret_key_2024';
 const signToken = (userId) =>
   jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
 
+// In-memory fallback users store if MongoDB is not running locally
+const memoryUsers = [];
+
 // ─── REGISTER ─────────────────────────────────────────────────────────────────
 router.post('/register', async (req, res) => {
   try {
-    await connectToDatabase();
-
     const { name, email, password, lastPeriodDate, averageCycleLength, periodLength } = req.body;
 
     if (!name || !email || !password) {
@@ -25,32 +26,65 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 6 characters.' });
     }
 
-    const existing = await User.findOne({ email });
-    if (existing) {
-      return res.status(400).json({ error: 'An account with this email already exists.' });
+    let userObj = null;
+
+    try {
+      await connectToDatabase();
+      const existing = await User.findOne({ email });
+      if (existing) {
+        return res.status(400).json({ error: 'An account with this email already exists.' });
+      }
+
+      const created = await User.create({
+        name,
+        email,
+        password,
+        lastPeriodDate: lastPeriodDate || new Date().toISOString().split('T')[0],
+        averageCycleLength: Number(averageCycleLength) || 28,
+        periodLength: Number(periodLength) || 5,
+      });
+
+      userObj = {
+        id: created._id,
+        name: created.name,
+        email: created.email,
+        lastPeriodDate: created.lastPeriodDate,
+        averageCycleLength: created.averageCycleLength,
+        periodLength: created.periodLength,
+      };
+    } catch (dbErr) {
+      console.warn('MongoDB not running, using in-memory registration fallback.');
+      const existingMem = memoryUsers.find(u => u.email === email);
+      if (existingMem) {
+        return res.status(400).json({ error: 'An account with this email already exists.' });
+      }
+
+      const newMemUser = {
+        id: 'mem_' + Date.now(),
+        name,
+        email,
+        password,
+        lastPeriodDate: lastPeriodDate || new Date().toISOString().split('T')[0],
+        averageCycleLength: Number(averageCycleLength) || 28,
+        periodLength: Number(periodLength) || 5,
+      };
+      memoryUsers.push(newMemUser);
+
+      userObj = {
+        id: newMemUser.id,
+        name: newMemUser.name,
+        email: newMemUser.email,
+        lastPeriodDate: newMemUser.lastPeriodDate,
+        averageCycleLength: newMemUser.averageCycleLength,
+        periodLength: newMemUser.periodLength,
+      };
     }
 
-    const user = await User.create({
-      name,
-      email,
-      password,
-      lastPeriodDate: lastPeriodDate || new Date().toISOString().split('T')[0],
-      averageCycleLength: Number(averageCycleLength) || 28,
-      periodLength: Number(periodLength) || 5,
-    });
-
-    const token = signToken(user._id);
+    const token = signToken(userObj.id);
 
     res.status(201).json({
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        lastPeriodDate: user.lastPeriodDate,
-        averageCycleLength: user.averageCycleLength,
-        periodLength: user.periodLength,
-      },
+      user: userObj,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -60,36 +94,55 @@ router.post('/register', async (req, res) => {
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 router.post('/login', async (req, res) => {
   try {
-    await connectToDatabase();
-
     const { email, password } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required.' });
     }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
-    }
+    let userObj = null;
 
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Invalid email or password.' });
-    }
+    try {
+      await connectToDatabase();
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
 
-    const token = signToken(user._id);
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
 
-    res.json({
-      token,
-      user: {
+      userObj = {
         id: user._id,
         name: user.name,
         email: user.email,
         lastPeriodDate: user.lastPeriodDate,
         averageCycleLength: user.averageCycleLength,
         periodLength: user.periodLength,
-      },
+      };
+    } catch (dbErr) {
+      console.warn('MongoDB not running, using in-memory login fallback.');
+      const memUser = memoryUsers.find(u => u.email === email && u.password === password);
+      if (!memUser) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
+      userObj = {
+        id: memUser.id,
+        name: memUser.name,
+        email: memUser.email,
+        lastPeriodDate: memUser.lastPeriodDate,
+        averageCycleLength: memUser.averageCycleLength,
+        periodLength: memUser.periodLength,
+      };
+    }
+
+    const token = signToken(userObj.id);
+
+    res.json({
+      token,
+      user: userObj,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
