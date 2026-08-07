@@ -1,6 +1,7 @@
 {
-  "name": "temp-app",
-  "version": "0.1.0",
+  "name": "auracycle",
+  "version": "1.0.0",
+  "description": "AuraCycle — Women's Health & Wellness Companion for menstrual tracking and personalized insights",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -10,6 +11,7 @@
   },
   "dependencies": {
     "lucide-react": "^1.27.0",
+    "mongoose": "^9.9.1",
     "next": "16.2.12",
     "react": "19.2.4",
     "react-dom": "19.2.4"

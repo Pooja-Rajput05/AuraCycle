@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Calendar, Heart, Sparkles, Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Bell } from 'lucide-react';
 import styles from './Navigation.module.css';
 
 export default function Navigation() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState('light');
+  const [profileName, setProfileName] = useState('');
 
   useEffect(() => {
     setMounted(true);
@@ -18,6 +19,14 @@ export default function Navigation() {
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
+  useEffect(() => {
+    if (pathname === '/') return;
+    fetch('/api/profile')
+      .then((res) => res.json())
+      .then((data) => setProfileName(data.name || ''))
+      .catch(() => {});
+  }, [pathname]);
+
   const toggleTheme = () => {
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(nextTheme);
@@ -25,51 +34,98 @@ export default function Navigation() {
     document.documentElement.setAttribute('data-theme', nextTheme);
   };
 
-  const navItems = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Calendar', path: '/calendar', icon: Calendar },
-    { name: 'Wellness', path: '/wellness', icon: Heart },
-    { name: 'Insights', path: '/insights', icon: Sparkles },
+  const isLandingNav = pathname === '/';
+  const initials = profileName
+    ? profileName
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'AC';
+
+  const appNavItems = [
+    { name: 'Dashboard', path: '/dashboard' },
+    { name: 'Tracker', path: '/calendar' },
+    { name: 'Insights', path: '/insights' },
+    { name: 'Wellness', path: '/wellness' },
+  ];
+
+  const landingNavItems = [
+    { name: 'How It Works', href: '#how-it-works' },
+    { name: 'Features', href: '#features' },
+    { name: 'Privacy', href: '#privacy' },
   ];
 
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <div className={styles.brand}>
-          <div className={styles.logoMark}>
-            <div className={styles.innerDot} />
-          </div>
-          <span className={styles.appName}>AuraCycle</span>
-        </div>
-        
-        <nav className={styles.nav}>
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                href={item.path}
-                className={`${styles.navItem} ${isActive ? styles.active : ''}`}
-              >
-                <Icon className={styles.icon} size={16} />
-                <span className={styles.label}>{item.name}</span>
-                {isActive && <div className={styles.activeDot} />}
-              </Link>
-            );
-          })}
+        <Link href="/" className={styles.brand}>
+          AuraCycle
+        </Link>
 
-          {/* Soothing Theme Toggle Switch */}
-          {mounted && (
-            <button 
-              onClick={toggleTheme} 
-              className={styles.themeToggle} 
-              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-            >
-              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
-            </button>
-          )}
+        <nav className={styles.nav}>
+          {isLandingNav
+            ? landingNavItems.map((item) => (
+                <a key={item.href} href={item.href} className={styles.landingLink}>
+                  {item.name}
+                </a>
+              ))
+            : appNavItems.map((item) => {
+                const isActive = pathname === item.path;
+                return (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    className={`${styles.navItem} ${isActive ? styles.active : ''}`}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
         </nav>
+
+        <div className={styles.actions}>
+          {isLandingNav ? (
+            <>
+              {mounted && (
+                <button
+                  onClick={toggleTheme}
+                  className={styles.themeToggle}
+                  aria-label="Theme toggle"
+                >
+                  {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+                </button>
+              )}
+              <Link href="/dashboard" className={styles.loginBtn}>
+                Log In
+              </Link>
+              <Link href="/dashboard" className={styles.getStartedBtn}>
+                Get Started
+              </Link>
+            </>
+          ) : (
+            <>
+              {mounted && (
+                <button
+                  onClick={toggleTheme}
+                  className={styles.themeToggle}
+                  aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                >
+                  {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+                </button>
+              )}
+
+              <button className={styles.bellBtn} aria-label="Notifications">
+                <Bell size={18} />
+              </button>
+
+              <Link href="/dashboard" className={styles.profileAvatar} title={profileName || 'Profile'}>
+                <span className={styles.initials}>{initials}</span>
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

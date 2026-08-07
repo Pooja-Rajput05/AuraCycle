@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LunaWell - Menstrual Health Companion</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#f5ece9",
+                      "tertiary-container": "#aca49b",
+                      "on-tertiary": "#ffffff",
+                      "secondary-fixed": "#cceace",
+                      "primary-fixed": "#ffdad4",
+                      "background": "#fff8f6",
+                      "on-secondary-fixed-variant": "#334d38",
+                      "outline-variant": "#dac1bd",
+                      "on-secondary-container": "#4e6952",
+                      "inverse-on-surface": "#f8efec",
+                      "primary-container": "#e88d7d",
+                      "surface-container-highest": "#e9e1de",
+                      "on-secondary-fixed": "#07200f",
+                      "surface": "#fff8f6",
+                      "error": "#ba1a1a",
+                      "primary-fixed-dim": "#ffb4a7",
+                      "on-primary-fixed": "#3c0703",
+                      "inverse-primary": "#ffb4a7",
+                      "surface-bright": "#fff8f6",
+                      "on-error-container": "#93000a",
+                      "on-primary-container": "#66271c",
+                      "on-surface": "#1e1b19",
+                      "surface-container-high": "#efe6e3",
+                      "surface-tint": "#93493c",
+                      "surface-variant": "#e9e1de",
+                      "inverse-surface": "#342f2e",
+                      "error-container": "#ffdad6",
+                      "outline": "#87726f",
+                      "on-primary": "#ffffff",
+                      "on-primary-fixed-variant": "#763227",
+                      "on-tertiary-container": "#403a33",
+                      "tertiary-fixed-dim": "#cec5bc",
+                      "secondary-container": "#c9e8cb",
+                      "on-error": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#4a654e",
+                      "tertiary": "#645d56",
+                      "surface-container-low": "#fbf2ef",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#93493c",
+                      "tertiary-fixed": "#ebe1d7",
+                      "surface-dim": "#e1d8d5",
+                      "on-tertiary-fixed": "#1f1b15",
+                      "on-background": "#1e1b19",
+                      "on-surface-variant": "#544340",
+                      "on-tertiary-fixed-variant": "#4c463f",
+                      "secondary-fixed-dim": "#b0ceb2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-padding-desktop": "40px",
+                      "gutter": "16px",
+                      "stack-md": "12px",
+                      "base": "8px",
+                      "container-padding-mobile": "20px",
+                      "stack-sm": "4px",
+                      "stack-lg": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-sm": [
+                              "Be Vietnam Pro"
+                      ],
+                      "label-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Be Vietnam Pro"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-lg": [
+                              "Be Vietnam Pro"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.04em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "48px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky bg-background z-50 transition-shadow duration-300" id="main-nav">
+<div class="flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop py-4 max-w-[1200px] mx-auto">
+<!-- Brand -->
+<a class="font-headline-lg text-headline-lg font-bold text-primary" href="#">LunaWell</a>
+<!-- Navigation Links (Desktop) -->
+<nav class="hidden md:flex gap-gutter items-center">
+<!-- Using generic tabs since this is a landing page, prioritizing the call to action -->
+<a class="text-on-surface-variant pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#how-it-works">How it Works</a>
+<a class="text-on-surface-variant pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#features">Features</a>
+<a class="text-on-surface-variant pb-1 font-label-md text-label-md hover:text-primary transition-colors duration-200" href="#testimonials">Stories</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-base">
+<a class="hidden md:inline-flex px-6 py-3 rounded-full bg-surface-container text-primary font-label-md text-label-md hover:bg-surface-container-high transition-colors" href="#">Log In</a>
+<a class="inline-flex px-6 py-3 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity" href="#">Get Started</a>
+</div>
+</div>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="px-container-padding-mobile md:px-container-padding-desktop py-16 md:py-32 max-w-[1200px] mx-auto flex flex-col md:flex-row items-center gap-12">
+<div class="flex-1 space-y-stack-lg z-10 relative">
+<!-- Decorative element -->
+<div class="absolute -top-12 -left-12 w-24 h-24 bg-primary-fixed rounded-full opacity-50 blur-2xl -z-10"></div>
+<h1 class="font-display-lg text-display-lg text-on-surface md:pr-12">
+                    Understand your body, <br/> <span class="text-primary">honor your rhythm.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
+                    A compassionate space to track your menstrual health, mood, and symptoms. Gain insights without the clinical overwhelm.
+                </p>
+<div class="flex flex-col sm:flex-row gap-stack-md pt-4">
+<a class="inline-flex justify-center items-center px-8 py-4 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm" href="#">
+                        Start Your Journey
+                    </a>
+<a class="inline-flex justify-center items-center px-8 py-4 rounded-full border border-outline-variant text-primary font-label-md text-label-md hover:bg-surface-container transition-colors" href="#how-it-works">
+                        Learn More
+                    </a>
+</div>
+<div class="pt-8 flex items-center gap-4 text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border-2 border-background flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-tertiary">person</span></div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border-2 border-background flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-tertiary">person</span></div>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border-2 border-background flex items-center justify-center"><span class="material-symbols-outlined text-[16px] text-tertiary">person</span></div>
+</div>
+<span>Trusted by 10,000+ women</span>
+</div>
+</div>
+<div class="flex-1 relative w-full aspect-square md:aspect-[4/3] rounded-xl overflow-hidden bg-surface-container-lowest shadow-[0_16px_40px_-15px_rgba(147,73,60,0.1)] p-8 flex items-center justify-center border border-surface-container">
+<!-- Abstract Dashboard Visual -->
+<div class="w-full h-full relative">
+<div class="absolute inset-0 flex flex-col gap-6">
+<!-- Top Card -->
+<div class="bg-surface-container-low rounded-lg p-6 flex-1 shadow-sm relative overflow-hidden">
+<div class="absolute right-0 top-0 w-32 h-32 bg-primary-container opacity-20 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
+<div class="flex justify-between items-center mb-4">
+<div class="h-4 w-24 bg-surface-variant rounded"></div>
+<div class="h-8 w-8 rounded-full bg-primary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[18px]">calendar_month</span>
+</div>
+</div>
+<div class="flex items-end gap-4 mt-8">
+<div class="w-32 h-32 rounded-full border-8 border-surface-variant relative flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full -rotate-90" viewbox="0 0 100 100">
+<circle class="text-primary stroke-current" cx="50" cy="50" fill="none" r="46" stroke="currentColor" stroke-dasharray="289" stroke-dashoffset="70" stroke-width="8"></circle>
+</svg>
+<div class="text-center">
+<div class="font-headline-lg text-headline-lg text-on-surface">14</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">days left</div>
+</div>
+</div>
+<div class="space-y-3 flex-1">
+<div class="h-3 w-full bg-surface-variant rounded"></div>
+<div class="h-3 w-3/4 bg-surface-variant rounded"></div>
+<div class="h-3 w-5/6 bg-surface-variant rounded"></div>
+</div>
+</div>
+</div>
+<!-- Bottom Cards -->
+<div class="flex gap-6 h-32">
+<div class="bg-surface-container-low rounded-lg p-4 flex-1 shadow-sm flex flex-col justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">water_drop</span>
+<div class="h-3 w-16 bg-surface-variant rounded"></div>
+</div>
+<div class="flex gap-2">
+<div class="h-6 w-12 bg-secondary-fixed rounded-xl"></div>
+<div class="h-6 w-12 bg-surface-variant rounded-xl"></div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-4 flex-1 shadow-sm flex flex-col justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[20px]">mood</span>
+<div class="h-3 w-16 bg-surface-variant rounded"></div>
+</div>
+<div class="flex gap-2">
+<div class="h-6 w-12 bg-tertiary-fixed rounded-xl"></div>
+<div class="h-6 w-16 bg-surface-variant rounded-xl"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer (from JSON) -->
+<footer class="w-full mt-auto bg-surface-container">
+<div class="w-full py-stack-lg px-container-padding-mobile md:px-container-padding-desktop flex flex-col md:flex-row justify-between items-center gap-base max-w-[1200px] mx-auto">
+<div class="font-headline-md text-headline-md text-primary">LunaWell</div>
+<nav class="flex flex-wrap justify-center gap-gutter">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Health Resources</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
+</nav>
+<div class="font-body-md text-body-md text-on-surface-variant text-sm text-center md:text-right">
+                    © 2024 LunaWell Health. All rights reserved.
+                </div>
+</div>
+</footer>
+</main>
+<script>
+        // Simple scroll shadow for header
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 10) {
+                nav.classList.add('shadow-sm', 'bg-surface-container-lowest');
+                nav.classList.remove('bg-background');
+            } else {
+                nav.classList.remove('shadow-sm', 'bg-surface-container-lowest');
+                nav.classList.add('bg-background');
+            }
+        });
+    </script>
+</body></html>

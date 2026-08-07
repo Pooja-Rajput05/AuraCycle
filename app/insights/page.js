@@ -1,408 +1,223 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sparkles, Apple, Activity, Flame, ChevronRight, HelpCircle, Info } from 'lucide-react';
-import { getPhaseDetails } from '../../lib/cycleCalculator';
+import Link from 'next/link';
+import { calculateCycleState } from '../../lib/cycleCalculator';
 
 export default function InsightsPage() {
-  const [currentPhase, setCurrentPhase] = useState('Follicular');
-  const [selectedPhase, setSelectedPhase] = useState('Follicular');
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simDay, setSimDay] = useState(1);
 
   useEffect(() => {
-    const fetchCurrentState = async () => {
-      try {
-        const res = await fetch('/api/insights');
-        const json = await res.json();
-        if (json.cycleState?.phase) {
-          setCurrentPhase(json.cycleState.phase);
-          setSelectedPhase(json.cycleState.phase); // Pre-select current phase
-        }
-      } catch (e) {
-        console.error('Error fetching cycle insights:', e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCurrentState();
+    const simActive = localStorage.getItem('isSimulating') === 'true';
+    const savedDay = Number(localStorage.getItem('simulationDay') || '1');
+    setIsSimulating(simActive);
+    setSimDay(savedDay);
+
+    fetch('/api/insights')
+      .then((res) => res.json())
+      .then(setData)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  if (loading) {
+  if (loading || !data?.profile) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>Loading insights...</p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>Analyzing your wellness patterns...</p>
       </div>
     );
   }
 
-  const phaseNames = ['Menstrual', 'Follicular', 'Ovulatory', 'Luteal'];
-  const details = getPhaseDetails(selectedPhase);
+  const { profile, analytics } = data;
+  let activeDay = calculateCycleState(
+    profile.lastPeriodDate,
+    profile.averageCycleLength,
+    profile.periodLength
+  ).cycleDay;
 
-  // Phase color theme map
-  const phaseColors = {
-    Menstrual: 'var(--phase-menstrual)',
-    Follicular: 'var(--phase-follicular)',
-    Ovulatory: 'var(--phase-ovulatory)',
-    Luteal: 'var(--phase-luteal)'
-  };
+  if (isSimulating) activeDay = simDay;
 
-  const activeColor = phaseColors[selectedPhase];
+  const cycleState = calculateCycleState(
+    profile.lastPeriodDate,
+    profile.averageCycleLength,
+    profile.periodLength,
+    new Date(),
+    activeDay
+  );
 
-  // Dynamic calculations for Hormone Wave Diagram
-  // We represent the selected day based on the phase selected:
-  const getPhaseCoordinates = (phase) => {
-    switch (phase) {
-      case 'Menstrual':
-        return { dayNum: 3, lineX: 52, estrogenY: 95, progesteroneY: 100 };
-      case 'Follicular':
-        return { dayNum: 9, lineX: 116, estrogenY: 60, progesteroneY: 100 };
-      case 'Ovulatory':
-        return { dayNum: 14, lineX: 170, estrogenY: 28, progesteroneY: 90 };
-      case 'Luteal':
-        return { dayNum: 22, lineX: 256, estrogenY: 50, progesteroneY: 20 };
-      default:
-        return { dayNum: 9, lineX: 116, estrogenY: 60, progesteroneY: 100 };
-    }
-  };
+  const {
+    moodPatterns = [],
+    symptomFrequency = [],
+    wellnessSuggestions = [],
+    personalizedInsights = [],
+    cycleConsistency = {},
+    wellness = {},
+  } = analytics || {};
 
-  const coords = getPhaseCoordinates(selectedPhase);
+  const radius = 30;
+  const circumference = 2 * Math.PI * radius;
+  const progressPercent = (activeDay / profile.averageCycleLength) * circumference;
+
+  const moodInsight = personalizedInsights.find((i) => i.type === 'mood');
+  const moodDesc = moodInsight
+    ? moodInsight.description
+    : wellness.totalLogs > 0
+      ? `Based on ${wellness.totalLogs} logged days, your mood patterns are being analyzed across cycle weeks.`
+      : 'Start logging daily to discover mood patterns across your cycle.';
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      
-      {/* Header */}
+    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: '700', letterSpacing: '1px' }}>PERSONALIZED RECOMMENDATIONS</span>
-        <h1>Cycle Insights</h1>
+        <h1 className="font-display-lg" style={{ margin: 0 }}>Your Insights</h1>
+        <p className="font-body-lg" style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>
+          Personalized patterns from your wellness data
+        </p>
       </div>
 
-      {/* Phase Selector Tabs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
-        {phaseNames.map((phase) => {
-          const isSelected = selectedPhase === phase;
-          const isCurrent = currentPhase === phase;
-          const color = phaseColors[phase];
-          
-          return (
-            <button
-              key={phase}
-              onClick={() => setSelectedPhase(phase)}
-              style={{
-                background: isSelected ? `${color}22` : 'rgba(255, 255, 255, 0.45)',
-                border: '1px solid',
-                borderColor: isSelected ? color : 'rgba(232, 165, 152, 0.12)',
-                borderRadius: '12px',
-                padding: '10px 4px',
-                color: isSelected ? color : 'var(--text-secondary)',
-                fontSize: '0.75rem',
-                fontWeight: '700',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
-              <span>{phase}</span>
-              {isCurrent && (
-                <span style={{
-                  fontSize: '0.55rem',
-                  background: 'var(--accent-rose)',
-                  color: 'white',
-                  padding: '1px 5px',
-                  borderRadius: '4px',
-                  fontWeight: '800'
-                }}>
-                  CURRENT
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Hormone Fluctuations Interactive Diagram */}
-      <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <div className="flex-between">
-          <h3 style={{ fontSize: '1rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-primary)' }}>
-            <Sparkles size={16} style={{ color: 'var(--accent-rose)' }} />
-            Estrogen & Progesterone Waves
-          </h3>
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600 }}>Day {coords.dayNum} in Cycle</span>
+      {/* Personalized insight cards */}
+      {personalizedInsights.length > 0 && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+          {personalizedInsights.slice(0, 3).map((insight) => (
+            <div key={insight.title} className="glass-card" style={{ padding: '20px' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', color: 'var(--accent-rose)', letterSpacing: '0.04em' }}>
+                {insight.type}
+              </span>
+              <h3 className="font-headline-md" style={{ fontSize: '1rem', margin: '6px 0' }}>{insight.title}</h3>
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>{insight.description}</p>
+            </div>
+          ))}
         </div>
+      )}
 
-        {/* SVG Drawing of the hormone waveforms */}
-        <div style={{ display: 'flex', justifyContent: 'center', width: '100%', padding: '10px 0', position: 'relative' }}>
-          <svg width="340" height="130" style={{ overflow: 'visible' }}>
-            <defs>
-              {/* Gradients for filling waves */}
-              <linearGradient id="estrogenGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-pink)" stopOpacity="0.18" />
-                <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-              </linearGradient>
-              <linearGradient id="progesteroneGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--accent-purple)" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-
-            {/* Flat Zero Line (baseline) */}
-            <line x1="20" y1="100" x2="320" y2="100" stroke="rgba(232, 165, 152, 0.15)" strokeWidth="1" />
-
-            {/* Estrogen Wave Area & Path */}
-            <path
-              d="M 20 100 Q 60 100 100 70 T 170 25 T 215 80 Q 235 75 255 50 T 295 50 T 320 100"
-              fill="url(#estrogenGrad)"
-            />
-            <path
-              d="M 20 100 Q 60 100 100 70 T 170 25 T 215 80 Q 235 75 255 50 T 295 50 T 320 100"
-              fill="none"
-              stroke="var(--accent-rose)"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-            />
-
-            {/* Progesterone Wave Area & Path */}
-            <path
-              d="M 20 100 L 160 100 C 190 100 220 15 255 15 C 285 15 310 90 320 100"
-              fill="url(#progesteroneGrad)"
-            />
-            <path
-              d="M 20 100 L 160 100 C 190 100 220 15 255 15 C 285 15 310 90 320 100"
-              fill="none"
-              stroke="var(--accent-purple)"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeDasharray="1 0"
-            />
-
-            {/* Vertical Cycle Tracker Indicator Line */}
-            <line
-              x1={coords.lineX}
-              y1="10"
-              x2={coords.lineX}
-              y2="110"
-              stroke="var(--text-muted)"
-              strokeWidth="1.5"
-              strokeDasharray="4 4"
-              style={{ transition: 'x1 0.4s ease, x2 0.4s ease' }}
-            />
-
-            {/* Estrogen Tracking Node */}
-            <circle
-              cx={coords.lineX}
-              cy={coords.estrogenY}
-              r="6"
-              fill="var(--accent-rose)"
-              stroke="white"
-              strokeWidth="2"
-              style={{ transition: 'cx 0.4s ease, cy 0.4s ease', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }}
-            />
-
-            {/* Progesterone Tracking Node */}
-            <circle
-              cx={coords.lineX}
-              cy={coords.progesteroneY}
-              r="6"
-              fill="var(--accent-purple)"
-              stroke="white"
-              strokeWidth="2"
-              style={{ transition: 'cx 0.4s ease, cy 0.4s ease', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }}
-            />
-
-            {/* Labels */}
-            <text x="20" y="115" fill="var(--text-muted)" fontSize="9" fontWeight="700">Day 1</text>
-            <text x="170" y="115" fill="var(--text-muted)" fontSize="9" fontWeight="700" textAnchor="middle">Day 14 (Ovulation)</text>
-            <text x="320" y="115" fill="var(--text-muted)" fontSize="9" fontWeight="700" textAnchor="end">Day 28</text>
-          </svg>
-        </div>
-
-        {/* Legend */}
-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', borderTop: '1px solid rgba(232, 165, 152, 0.12)', paddingTop: '10px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent-rose)', display: 'inline-block' }} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Estrogen (Energy & Mood)</span>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '20px' }}>
+        {/* Phase focus */}
+        <div className="glass-card" style={{ gridColumn: 'span 8', padding: '24px', display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative', width: '110px', height: '110px', flexShrink: 0 }}>
+            <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
+              <circle cx="50" cy="50" r={radius} fill="none" stroke="var(--bg-secondary)" strokeWidth="6" />
+              <circle cx="50" cy="50" fill="none" r={radius} stroke="var(--accent-rose)" strokeWidth="6" strokeDasharray={circumference} strokeDashoffset={circumference - progressPercent} strokeLinecap="round" />
+            </svg>
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <span className="font-headline-md" style={{ color: 'var(--accent-rose)', fontSize: '1.25rem' }}>Day {activeDay}</span>
+              <span className="font-label-sm" style={{ color: 'var(--text-secondary)', fontSize: '0.6rem', textTransform: 'uppercase' }}>{cycleState.phase}</span>
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: 'var(--accent-purple)', display: 'inline-block' }} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Progesterone (Calm & Rest)</span>
+          <div style={{ flex: 1, minWidth: '220px' }}>
+            <span className="font-label-sm" style={{ color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Current Phase Focus</span>
+            <h2 className="font-headline-md" style={{ margin: '4px 0 8px' }}>{cycleState.phase} Phase</h2>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.4, margin: 0 }}>
+              {cycleState.phaseDetails?.summary}
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* Phase Details Card */}
-      <div className="glass-panel" style={{ padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {/* Title */}
-        <div className="flex-between" style={{ borderBottom: '1px solid rgba(232, 165, 152, 0.12)', paddingBottom: '14px' }}>
-          <div>
-            <h2 style={{ color: activeColor, fontFamily: 'var(--font-serif)', fontSize: '1.6rem' }}>
-              {details.name}
-            </h2>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: 700 }}>
-              {details.range}
-            </span>
+        {/* Cycle consistency */}
+        <div className="glass-card" style={{ gridColumn: 'span 4', padding: '24px' }}>
+          <h3 className="font-label-md" style={{ fontWeight: 700, margin: 0 }}>Cycle Length</h3>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{cycleConsistency.label || 'Building baseline'}</span>
+          <h2 className="font-headline-lg" style={{ margin: '16px 0', fontSize: '1.8rem' }}>
+            {cycleConsistency.cycleLength || profile.averageCycleLength}{' '}
+            <span style={{ fontSize: '0.98rem', color: 'var(--text-secondary)' }}>days avg</span>
+          </h2>
+          <div style={{ width: '100%', height: '5px', borderRadius: '3px', background: 'var(--bg-secondary)', overflow: 'hidden' }}>
+            <div style={{ width: `${cycleConsistency.score || 85}%`, height: '100%', background: 'var(--accent-rose)', borderRadius: '3px' }} />
           </div>
-          {currentPhase === selectedPhase && (
-            <span style={{
-              fontSize: '0.75rem',
-              background: `${activeColor}18`,
-              color: 'var(--text-primary)',
-              border: `1px solid ${activeColor}`,
-              padding: '4px 12px',
-              borderRadius: '20px',
-              fontWeight: 700
-            }}>
-              Active Now
-            </span>
+          {wellness.loggingStreak > 0 && (
+            <p style={{ fontSize: '0.78rem', color: 'var(--accent-sage)', fontWeight: 600, marginTop: '10px' }}>
+              {wellness.loggingStreak}-day logging streak
+            </p>
           )}
         </div>
+      </div>
 
-        {/* Description */}
-        <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--text-primary)' }}>
-          {details.summary}
-        </p>
-
-        {/* Hormone Status Indicator */}
-        <div style={{ background: 'rgba(255, 255, 255, 0.5)', border: '1px solid rgba(232, 165, 152, 0.12)', borderRadius: '14px', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
-            ACTIVE HORMONE FOCUS
-          </span>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            <div>
-              <div className="flex-between" style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Estrogen</span>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{details.hormones.estrogen}</span>
-              </div>
-              <div style={{ height: '4px', background: 'rgba(0,0,0,0.04)', borderRadius: '2px' }}>
-                <div style={{
-                  height: '100%',
-                  background: 'var(--accent-rose)',
-                  borderRadius: '2px',
-                  width: details.hormones.estrogen.includes('Peak') ? '100%' 
-                    : details.hormones.estrogen.includes('High') ? '80%'
-                    : details.hormones.estrogen.includes('Rising') || details.hormones.estrogen.includes('Moderate') ? '50%'
-                    : '15%'
-                }} />
-              </div>
-            </div>
-            
-            <div>
-              <div className="flex-between" style={{ fontSize: '0.8rem', marginBottom: '4px' }}>
-                <span style={{ color: 'var(--text-secondary)' }}>Progesterone</span>
-                <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{details.hormones.progesterone}</span>
-              </div>
-              <div style={{ height: '4px', background: 'rgba(0,0,0,0.04)', borderRadius: '2px' }}>
-                <div style={{
-                  height: '100%',
-                  background: 'var(--accent-purple)',
-                  borderRadius: '2px',
-                  width: details.hormones.progesterone.includes('High') ? '90%'
-                    : details.hormones.progesterone.includes('Rising') || details.hormones.progesterone.includes('Moderate') ? '50%'
-                    : '15%'
-                }} />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Diet Card */}
-        <div style={adviceBlockStyle}>
-          <div style={{ ...adviceIconStyle, color: 'var(--accent-rose)', background: 'rgba(232, 165, 152, 0.15)' }}>
-            <Apple size={18} />
-          </div>
-          <div>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)' }}>Nutrition Recommendations</h4>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '3px', lineHeight: '1.4' }}>
-              {details.diet}
-            </p>
-          </div>
-        </div>
-
-        {/* Exercise Card */}
-        <div style={adviceBlockStyle}>
-          <div style={{ ...adviceIconStyle, color: 'var(--accent-sage)', background: 'rgba(139, 176, 154, 0.15)' }}>
-            <Activity size={18} />
-          </div>
-          <div>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)' }}>Optimal Physical Activity</h4>
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '3px', lineHeight: '1.4' }}>
-              {details.exercise}
-            </p>
-          </div>
+      {/* Mood patterns - REAL DATA */}
+      <div className="glass-card" style={{ padding: '24px' }}>
+        <h3 className="font-headline-md" style={{ fontSize: '1.15rem', margin: '0 0 4px' }}>Mood Patterns</h3>
+        <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '0 0 16px' }}>{moodDesc}</p>
+        <div style={{ display: 'flex', justifyContent: 'center', overflowX: 'auto', padding: '8px 0' }}>
+          <svg width="680" height="150" style={{ overflow: 'visible' }}>
+            {[20, 60, 100].map((y) => (
+              <line key={y} x1="40" y1={y} x2="660" y2={y} stroke="rgba(0,0,0,0.03)" strokeWidth="1" />
+            ))}
+            <text x="25" y="25" fontSize="14" textAnchor="middle">😊</text>
+            <text x="25" y="65" fontSize="14" textAnchor="middle">😐</text>
+            <text x="25" y="105" fontSize="14" textAnchor="middle">😔</text>
+            {moodPatterns.map((week, idx) => {
+              const x = 55 + idx * 130;
+              const barHeight = week.sampleSize > 0 ? ((week.avgMood - 1) / 4) * 80 : 20;
+              const y = 110 - barHeight;
+              const color = week.avgMood >= 4 ? '#4a654e' : week.avgMood >= 3 ? '#b0ceb2' : '#ffb4a7';
+              return (
+                <g key={week.week}>
+                  <rect x={x} y={y} width="28" height={barHeight} fill={color} rx="4" opacity={week.sampleSize > 0 ? 1 : 0.3} />
+                  <text x={x + 14} y="130" fill="var(--text-secondary)" fontSize="10" fontWeight="700" textAnchor="middle">
+                    Week {week.week}
+                  </text>
+                  {week.sampleSize > 0 && (
+                    <text x={x + 14} y={y - 6} fill="var(--text-secondary)" fontSize="8" textAnchor="middle">
+                      {week.label}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+            <line x1="40" y1="110" x2="660" y2="110" stroke="var(--card-border)" strokeWidth="1.5" />
+          </svg>
         </div>
       </div>
 
-      {/* Cycle Phases 101 Q&A */}
-      <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <h3 style={{ fontSize: '1.1rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <HelpCircle size={18} style={{ color: 'var(--accent-rose)' }} />
-          Wellness Education
-        </h3>
-        
-        <details style={qaDetailsStyle}>
-          <summary style={qaSummaryStyle}>What is "Cycle Syncing"? <ChevronRight size={14} style={qaIconStyle} /></summary>
-          <p style={qaTextStyle}>
-            Cycle syncing is the practice of aligning your diet, exercise, and productivity styles with the phases of your menstrual cycle to optimize your energy levels and balance hormones naturally.
-          </p>
-        </details>
-        
-        <details style={qaDetailsStyle}>
-          <summary style={qaSummaryStyle}>How does stress affect my cycle? <ChevronRight size={14} style={qaIconStyle} /></summary>
-          <p style={qaTextStyle}>
-            High stress triggers cortisol production, which can suppress gonadotropin-releasing hormone (GnRH), leading to delayed ovulation, irregular periods, or more intense PMS symptoms.
-          </p>
-        </details>
-      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+        {/* Wellness suggestions - REAL */}
+        <div className="glass-card" style={{ padding: '24px' }}>
+          <h3 className="font-headline-md" style={{ fontSize: '1.15rem', margin: '0 0 16px' }}>Wellness Suggestions</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {wellnessSuggestions.map((s) => (
+              <div key={s.title} style={{ display: 'flex', gap: '14px' }}>
+                <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(147,73,60,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px', color: 'var(--accent-rose)' }}>{s.icon}</span>
+                </div>
+                <div>
+                  <h4 style={{ fontWeight: 700, fontSize: '0.88rem', margin: 0 }}>{s.title}</h4>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '2px 0 0', lineHeight: 1.4 }}>{s.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
+        {/* Symptom frequency - REAL */}
+        <div className="glass-card" style={{ padding: '24px' }}>
+          <h3 className="font-headline-md" style={{ fontSize: '1.15rem', margin: '0 0 16px' }}>Symptom Frequency</h3>
+          {symptomFrequency.length > 0 ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {symptomFrequency.slice(0, 5).map((s) => {
+                const maxCount = symptomFrequency[0]?.count || 1;
+                return (
+                  <div key={s.id}>
+                    <div className="flex-between" style={{ fontSize: '0.82rem', marginBottom: '4px' }}>
+                      <span style={{ fontWeight: 600 }}>{s.label}</span>
+                      <span style={{ color: 'var(--text-secondary)' }}>{s.count} logs</span>
+                    </div>
+                    <div style={{ height: '6px', background: 'var(--bg-secondary)', borderRadius: '3px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', background: 'var(--accent-plum)', width: `${(s.count / maxCount) * 100}%`, borderRadius: '3px' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+              No symptoms logged yet. Track symptoms on your calendar to see frequency trends.
+            </p>
+          )}
+          <Link href="/calendar" style={{ display: 'block', marginTop: '16px', padding: '10px', border: '1px solid var(--card-border)', borderRadius: '8px', textAlign: 'center', textDecoration: 'none', color: 'var(--text-primary)', fontWeight: 700, fontSize: '0.84rem' }}>
+            View Full Symptom Log
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
-
-// Inline Styles
-const adviceBlockStyle = {
-  display: 'flex',
-  gap: '12px',
-  alignItems: 'flex-start',
-  marginTop: '4px',
-};
-
-const adviceIconStyle = {
-  width: '38px',
-  height: '38px',
-  borderRadius: '10px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexShrink: 0,
-};
-
-const qaDetailsStyle = {
-  background: 'rgba(255, 255, 255, 0.45)',
-  border: '1px solid rgba(232, 165, 152, 0.12)',
-  borderRadius: '12px',
-  padding: '12px 14px',
-};
-
-const qaSummaryStyle = {
-  fontSize: '0.9rem',
-  fontWeight: '600',
-  color: 'var(--text-primary)',
-  cursor: 'pointer',
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  listStyle: 'none', // Remove default list arrow
-};
-
-const qaIconStyle = {
-  color: 'var(--text-muted)',
-  transition: 'transform 0.2s',
-};
-
-const qaTextStyle = {
-  fontSize: '0.85rem',
-  color: 'var(--text-secondary)',
-  marginTop: '8px',
-  lineHeight: '1.5',
-};

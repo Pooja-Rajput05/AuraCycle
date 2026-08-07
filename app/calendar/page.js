@@ -1,20 +1,26 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Droplet, Heart, Smile, Plus } from 'lucide-react';
-import LogModal from '../../components/LogModal';
-import { getCalendarPredictions } from '../../lib/cycleCalculator';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { getCalendarPredictions, calculateCycleState } from '../../lib/cycleCalculator';
+import { useToast } from '../../components/ToastProvider';
 
 export default function CalendarPage() {
+  const router = useRouter();
+  const { toast } = useToast();
   const [profile, setProfile] = useState(null);
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [isLogOpen, setIsLogOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
+  
+  // Form logging state
+  const [selectedMood, setSelectedMood] = useState('');
+  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const [selectedFlow, setSelectedFlow] = useState(0); // 0 = None, 1 = Light, 2 = Medium, 3 = Heavy
 
-  // Month navigation state
+  // Month navigation
   const [currentDate, setCurrentDate] = useState(new Date());
-
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
@@ -27,6 +33,10 @@ export default function CalendarPage() {
       const logsRes = await fetch('/api/logs');
       const logsData = await logsRes.json();
       setLogs(logsData);
+
+      // Pre-select today's date on mount
+      const todayStr = new Date().toISOString().split('T')[0];
+      setSelectedDate(prev => prev || todayStr);
     } catch (e) {
       console.error('Error fetching calendar data:', e);
     } finally {
@@ -38,39 +48,96 @@ export default function CalendarPage() {
     fetchCalendarData();
   }, []);
 
-  const handleSaveLog = async (logData) => {
+  // Pre-load logging form when selectedDate changes
+  useEffect(() => {
+    if (!selectedDate) return;
+    const existingLog = logs.find(l => l.date === selectedDate);
+    if (existingLog) {
+      // Map mood level to key
+      if (existingLog.mood === 5) setSelectedMood('Energized');
+      else if (existingLog.mood === 4) setSelectedMood('Happy');
+      else if (existingLog.mood === 3) setSelectedMood('Calm');
+      else if (existingLog.mood === 2) setSelectedMood('Sensitive');
+      else if (existingLog.mood === 1) setSelectedMood('Anxious');
+      else setSelectedMood('');
+
+      setSelectedSymptoms(existingLog.symptoms || []);
+      setSelectedFlow(existingLog.flow || 0);
+    } else {
+      setSelectedMood('');
+      setSelectedSymptoms([]);
+      setSelectedFlow(0);
+    }
+  }, [selectedDate, logs]);
+
+  // Saving logs handler
+  const handleSaveLog = async () => {
+    let numericMood = 3;
+    if (selectedMood === 'Energized') numericMood = 5;
+    else if (selectedMood === 'Happy') numericMood = 4;
+    else if (selectedMood === 'Calm') numericMood = 3;
+    else if (selectedMood === 'Sensitive') numericMood = 2;
+    else if (selectedMood === 'Anxious') numericMood = 1;
+
+    const existingLog = logs.find(l => l.date === selectedDate) || {
+      date: selectedDate,
+      water: 0,
+      sleep: 7,
+      completedTasks: []
+    };
+
+    const newLog = {
+      ...existingLog,
+      date: selectedDate,
+      mood: numericMood,
+      symptoms: selectedSymptoms,
+      flow: Number(selectedFlow)
+    };
+
     try {
       const res = await fetch('/api/logs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(logData),
+        body: JSON.stringify(newLog),
       });
       if (res.ok) {
         fetchCalendarData();
+        toast(`Log saved for ${selectedDate}`, 'success');
+      } else {
+        const err = await res.json();
+        toast(err.error || 'Failed to save log', 'error');
       }
     } catch (e) {
       console.error('Error saving log:', e);
     }
   };
 
+  // Symptoms checklist toggling
+  const handleToggleSymptom = (symptom) => {
+    setSelectedSymptoms(prev => 
+      prev.includes(symptom)
+        ? prev.filter(s => s !== symptom)
+        : [...prev, symptom]
+    );
+  };
+
   // Navigating months
   const prevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
   };
-
   const nextMonth = () => {
     setCurrentDate(new Date(year, month + 1, 1));
   };
 
   if (loading || !profile) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '75vh' }}>
         <p style={{ color: 'var(--text-secondary)' }}>Loading Calendar...</p>
       </div>
     );
   }
 
-  // Get predictions starting from the last period date
+  // Get predictions
   const predictions = getCalendarPredictions(
     profile.lastPeriodDate,
     profile.averageCycleLength,
@@ -78,18 +145,15 @@ export default function CalendarPage() {
     6 // Predict 6 cycles out
   );
 
-  // Helper: map a date string "YYYY-MM-DD" to its category
+  // Helper to map date key
   const getDateStatus = (dateStr) => {
-    // Check actual logged flow first
     const actualLog = logs.find((l) => l.date === dateStr);
-    if (actualLog) {
-      if (actualLog.flow > 0) {
-        return { type: 'menstrual-actual', log: actualLog };
-      }
+    if (actualLog && actualLog.flow > 0) {
+      return { type: 'menstrual-actual', log: actualLog };
+    } else if (actualLog) {
       return { type: 'logged', log: actualLog };
     }
 
-    // Fall back to predictions
     const pred = predictions.find((p) => p.date === dateStr);
     if (pred) {
       return { type: pred.type, log: null };
@@ -98,19 +162,23 @@ export default function CalendarPage() {
     return { type: 'regular', log: null };
   };
 
-  // Generate calendar grid
+  // Calculate day-of-cycle metrics for selectedDate
+  const activeCycleState = calculateCycleState(
+    profile.lastPeriodDate,
+    profile.averageCycleLength,
+    profile.periodLength,
+    new Date(selectedDate)
+  );
+
+  // Generate grid
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstDayIndex = new Date(year, month, 1).getDay(); // 0 is Sunday, 1 is Monday
+  const firstDayIndex = new Date(year, month, 1).getDay();
 
-  // We want to start the calendar week on Sunday.
   const calendarCells = [];
-
-  // Empty cells for padding before the 1st of the month
   for (let i = 0; i < firstDayIndex; i++) {
     calendarCells.push(null);
   }
 
-  // Actual days of the month
   for (let d = 1; d <= daysInMonth; d++) {
     const dString = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
     calendarCells.push({
@@ -126,288 +194,380 @@ export default function CalendarPage() {
     'July', 'August', 'September', 'October', 'November', 'December',
   ];
 
-  const selectedDayDetails = selectedDate ? getDateStatus(selectedDate) : null;
+  // Helper circle calculations for circular progress in Hero card
+  const radius = 40;
+  const circumference = 2 * Math.PI * radius;
+  const progressPercent = (activeCycleState.cycleDay / profile.averageCycleLength) * circumference;
 
   return (
-    <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="animate-fade-in font-body-md" style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
       
+      {/* Header */}
       <div>
-        <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: '600' }}>TRACK & PREDICT</span>
-        <h1>Cycle Calendar</h1>
+        <span className="font-label-sm" style={{ color: 'var(--text-secondary)' }}>TRACK & PREDICT</span>
+        <h1 className="font-display-lg" style={{ color: 'var(--text-primary)', margin: 0 }}>Cycle Calendar</h1>
       </div>
 
-      {/* Calendar Card */}
-      <div className="glass-panel" style={{ padding: '20px' }}>
-        {/* Calendar Header */}
-        <div className="flex-between" style={{ marginBottom: '16px' }}>
-          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem' }}>
-            {monthNames[month]} {year}
-          </h3>
-          <div style={{ display: 'flex', gap: '6px' }}>
-            <button onClick={prevMonth} style={navBtnStyle}>
-              <ChevronLeft size={18} />
-            </button>
-            <button onClick={nextMonth} style={navBtnStyle}>
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        </div>
+      {/* Main Grid Layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '20px' }}>
+        
+        {/* Left Column: Calendar & Overview (col-span-8) */}
+        <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* Hero Insight Card (Stitch styled) */}
+          <div 
+            style={{ 
+              background: 'var(--accent-plum)', 
+              color: 'white', 
+              borderRadius: '12px', 
+              padding: '24px', 
+              display: 'flex', 
+              flexDirection: 'row', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+              flexWrap: 'wrap',
+              gap: '16px'
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <h1 className="font-headline-lg" style={{ color: '#fff', margin: 0 }}>
+                Day {activeCycleState.cycleDay} of Cycle
+              </h1>
+              <p className="font-body-md" style={{ opacity: 0.9, margin: 0 }}>
+                {activeCycleState.phase === 'Menstrual' && "Period cycle active. Prioritize physical comfort."}
+                {activeCycleState.phase === 'Follicular' && "Follicular phase. Energy and focus are building."}
+                {activeCycleState.phase === 'Ovulatory' && "Ovulation window predicted to begin tomorrow."}
+                {activeCycleState.phase === 'Luteal' && "Luteal phase. Wind-down phase begins."}
+              </p>
+            </div>
 
-        {/* Weekday Labels */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', textAlign: 'center', marginBottom: '8px' }}>
-          {weekdays.map((day, i) => (
-            <span key={i} style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)' }}>
-              {day}
-            </span>
-          ))}
-        </div>
-
-        {/* Calendar Cells Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px' }}>
-          {calendarCells.map((cell, idx) => {
-            if (!cell) {
-              return <div key={`empty-${idx}`} style={{ height: '36px' }} />;
-            }
-
-            const { dayNum, dateStr, type, log } = cell;
-            const isSelected = selectedDate === dateStr;
-            const isToday = new Date().toISOString().split('T')[0] === dateStr;
-
-            // Compute background and border based on category
-            let cellStyle = { ...cellBaseStyle };
-            
-            if (isToday) {
-              cellStyle.border = '1px solid var(--text-primary)';
-            }
-            if (isSelected) {
-              cellStyle.boxShadow = '0 0 12px rgba(229, 152, 155, 0.4)';
-              cellStyle.border = '2px solid var(--accent-rose)';
-            }
-
-            // Cell styling matching theme
-            if (type === 'menstrual-actual') {
-              cellStyle.background = 'var(--phase-menstrual)';
-              cellStyle.color = '#3b172a';
-              cellStyle.fontWeight = 'bold';
-            } else if (type === 'menstrual') {
-              cellStyle.border = '1px dashed var(--phase-menstrual)';
-              cellStyle.color = 'var(--phase-menstrual)';
-              cellStyle.background = 'rgba(229, 152, 155, 0.08)';
-            } else if (type === 'fertile-peak') {
-              cellStyle.background = 'var(--phase-ovulatory)';
-              cellStyle.color = '#1f0d30';
-              cellStyle.fontWeight = 'bold';
-            } else if (type === 'fertile') {
-              cellStyle.background = 'rgba(192, 132, 252, 0.15)';
-              cellStyle.color = 'var(--accent-purple)';
-              cellStyle.border = '1px solid rgba(192, 132, 252, 0.3)';
-            } else if (type === 'logged') {
-              cellStyle.border = '1px solid var(--accent-pink)';
-              cellStyle.background = 'rgba(240, 166, 202, 0.05)';
-            }
-
-            return (
-              <button
-                key={dateStr}
-                onClick={() => setSelectedDate(dateStr)}
-                style={cellStyle}
-              >
-                <span>{dayNum}</span>
-                {/* Visual tiny indicator dot */}
-                {log && (
-                  <div style={{
-                    width: '4px',
-                    height: '4px',
-                    borderRadius: '50%',
-                    background: type === 'menstrual-actual' ? '#3b172a' : 'var(--accent-rose)',
-                    marginTop: '2px'
-                  }} />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Legend */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '20px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px', justifyContent: 'center' }}>
-          <div style={legendItemStyle}>
-            <span style={{ ...legendDotStyle, background: 'var(--phase-menstrual)' }} />
-            <span style={legendLabelStyle}>Period</span>
-          </div>
-          <div style={legendItemStyle}>
-            <span style={{ ...legendDotStyle, border: '1px dashed var(--phase-menstrual)', background: 'rgba(229, 152, 155, 0.08)' }} />
-            <span style={legendLabelStyle}>Predicted Period</span>
-          </div>
-          <div style={legendItemStyle}>
-            <span style={{ ...legendDotStyle, background: 'var(--phase-ovulatory)' }} />
-            <span style={legendLabelStyle}>Peak Fertile</span>
-          </div>
-          <div style={legendItemStyle}>
-            <span style={{ ...legendDotStyle, background: 'rgba(192, 132, 252, 0.15)', border: '1px solid rgba(192, 132, 252, 0.3)' }} />
-            <span style={legendLabelStyle}>Fertile Window</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Selected Day Details Panel */}
-      {selectedDate && (
-        <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div className="flex-between">
-            <h3 style={{ fontSize: '1.05rem', fontWeight: 600 }}>
-              {new Date(selectedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-            </h3>
-            <button
-              onClick={() => setIsLogOpen(true)}
-              className="btn btn-secondary"
-              style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}
-            >
-              <Plus size={14} /> Log Data
-            </button>
-          </div>
-
-          {selectedDayDetails?.log ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '4px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <div style={detailsBoxStyle}>
-                  <span style={detailsTitleStyle}><Droplet size={14} style={{ color: 'var(--accent-rose)' }} /> Flow</span>
-                  <span style={detailsValueStyle}>
-                    {['None', 'Light', 'Medium', 'Heavy'][selectedDayDetails.log.flow || 0]}
-                  </span>
-                </div>
-                <div style={detailsBoxStyle}>
-                  <span style={detailsTitleStyle}><Smile size={14} style={{ color: 'var(--accent-purple)' }} /> Mood</span>
-                  <span style={detailsValueStyle}>
-                    {['', 'Muted', 'Sad', 'Neutral', 'Happy', 'Energetic'][selectedDayDetails.log.mood || 3]}
-                  </span>
-                </div>
-              </div>
-
-              {selectedDayDetails.log.symptoms?.length > 0 && (
-                <div style={detailsBoxStyle}>
-                  <span style={detailsTitleStyle}><Heart size={14} style={{ color: 'var(--accent-rose)' }} /> Symptoms</span>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
-                    {selectedDayDetails.log.symptoms.map(s => (
-                      <span key={s} style={symptomBadgeStyle}>{s}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                  Water Intake: <strong>{selectedDayDetails.log.water || 0} ml</strong>
-                </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                  Sleep: <strong>{selectedDayDetails.log.sleep || 0} hrs</strong>
-                </div>
+            {/* Circular progress indicators */}
+            <div style={{ position: 'relative', width: '100px', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg className="transform -rotate-90" viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
+                <circle cx="50" cy="50" fill="none" r={radius} stroke="rgba(255,255,255,0.18)" strokeWidth="8" />
+                <circle 
+                  cx="50" 
+                  cy="50" 
+                  fill="none" 
+                  r={radius} 
+                  stroke="var(--accent-pink)" 
+                  strokeWidth="8" 
+                  strokeDasharray={circumference} 
+                  strokeDashoffset={circumference - progressPercent}
+                  strokeLinecap="round" 
+                  style={{ transition: 'stroke-dashoffset 0.5s ease' }}
+                />
+              </svg>
+              <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <span className="font-headline-md" style={{ color: '#fff', fontSize: '1.25rem', margin: 0 }}>
+                  {activeCycleState.cycleDay}
+                </span>
+                <span className="font-label-sm" style={{ color: '#fff', opacity: 0.8, fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Days
+                </span>
               </div>
             </div>
-          ) : (
-            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
-              No wellness data logged for this date.
-              {selectedDayDetails?.type === 'menstrual' && ' Predicted period day.'}
-              {selectedDayDetails?.type === 'fertile' && ' Predicted fertile day.'}
-              {selectedDayDetails?.type === 'fertile-peak' && ' Predicted peak ovulation day.'}
-            </p>
-          )}
-        </div>
-      )}
+          </div>
 
-      {/* Log Modal */}
-      <LogModal
-        isOpen={isLogOpen}
-        onClose={() => setIsLogOpen(false)}
-        onSave={handleSaveLog}
-        selectedDate={selectedDate}
-        initialData={selectedDayDetails?.log}
-      />
+          {/* Interactive Calendar Card */}
+          <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div className="flex-between">
+              <h2 className="font-headline-md" style={{ color: 'var(--text-primary)', margin: 0 }}>
+                {monthNames[month]} {year}
+              </h2>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button onClick={prevMonth} style={navBtnStyle}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_left</span>
+                </button>
+                <button onClick={nextMonth} style={navBtnStyle}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Grid Header */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', textAlign: 'center', paddingBottom: '8px', borderBottom: '1px solid var(--card-border)' }}>
+              {weekdays.map((w, idx) => (
+                <div key={idx} className="font-label-sm" style={{ color: 'var(--text-secondary)' }}>
+                  {w}
+                </div>
+              ))}
+            </div>
+
+            {/* Grid Cells */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '8px', textAlign: 'center' }}>
+              {calendarCells.map((cell, idx) => {
+                if (!cell) {
+                  return <div key={`empty-${idx}`} style={{ padding: '8px', opacity: 0.1 }}>-</div>;
+                }
+
+                const isSelected = selectedDate === cell.dateStr;
+                let bgStyle = { color: 'var(--text-primary)', cursor: 'pointer' };
+                let borderStyle = '1px solid transparent';
+                let indicatorDot = null;
+
+                if (cell.type === 'menstrual-actual') {
+                  bgStyle.backgroundColor = 'var(--accent-pink)';
+                  bgStyle.color = 'var(--text-primary)';
+                  bgStyle.fontWeight = '700';
+                } else if (cell.type === 'menstrual') {
+                  bgStyle.backgroundColor = 'var(--accent-pink)';
+                  bgStyle.color = 'var(--text-primary)';
+                  bgStyle.opacity = 0.85;
+                } else if (cell.type === 'fertile-peak') {
+                  bgStyle.backgroundColor = 'var(--accent-coral)';
+                  bgStyle.color = 'var(--text-primary)';
+                  bgStyle.fontWeight = '700';
+                } else if (cell.type === 'fertile') {
+                  bgStyle.backgroundColor = 'rgba(74, 101, 78, 0.12)';
+                  bgStyle.color = 'var(--accent-sage)';
+                  bgStyle.fontWeight = '600';
+                } else if (cell.type === 'logged') {
+                  // Small indicator dot for logged wellness info
+                  indicatorDot = <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: 'var(--accent-sage)', position: 'absolute', bottom: '2px', left: '50%', transform: 'translateX(-50%)' }} />;
+                }
+
+                if (isSelected) {
+                  borderStyle = '2px solid var(--accent-rose)';
+                  bgStyle.fontWeight = '700';
+                }
+
+                return (
+                  <div
+                    key={cell.dateStr}
+                    onClick={() => setSelectedDate(cell.dateStr)}
+                    style={{
+                      padding: '8px 0',
+                      borderRadius: '50%',
+                      aspectRatio: '1',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      position: 'relative',
+                      border: borderStyle,
+                      transition: 'all 0.18s',
+                      ...bgStyle
+                    }}
+                    className="calendar-day-cell"
+                  >
+                    <span style={{ fontSize: '0.88rem' }}>{cell.dayNum}</span>
+                    {indicatorDot}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Legend indicators */}
+            <div style={{ display: 'flex', gap: '16px', marginTop: '12px', borderTop: '1px solid var(--card-border)', paddingTop: '12px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent-pink)', display: 'inline-block' }} />
+                <span>Menstruation</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'rgba(74, 101, 78, 0.12)', display: 'inline-block' }} />
+                <span>Fertile Window</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent-sage)', display: 'inline-block' }} />
+                <span>Logged Wellness Data</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Right Column: Logging Sidebar & Trends (col-span-4) */}
+        <div style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          
+          {/* Log Symptoms Card */}
+          <div className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="flex-between">
+              <h2 className="font-headline-md" style={{ color: 'var(--text-primary)', margin: 0, fontSize: '1.15rem' }}>
+                Log Symptoms
+              </h2>
+              <span className="font-label-md" style={{ color: 'var(--text-secondary)', fontWeight: '700' }}>
+                {selectedDate === new Date().toISOString().split('T')[0] ? 'Today' : selectedDate}
+              </span>
+            </div>
+
+            {/* Mood selector */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <h3 className="font-label-md" style={{ color: 'var(--text-primary)', fontWeight: '600', margin: 0 }}>Mood</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {['Calm', 'Happy', 'Energized', 'Sensitive', 'Anxious'].map(m => {
+                  const isActive = selectedMood === m;
+                  return (
+                    <button
+                      key={m}
+                      onClick={() => setSelectedMood(m)}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        border: '1px solid',
+                        borderColor: isActive ? 'transparent' : 'var(--card-border)',
+                        background: isActive ? 'var(--accent-sage)' : 'transparent',
+                        color: isActive ? 'white' : 'var(--text-primary)',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {m}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Physical Symptoms */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <h3 className="font-label-md" style={{ color: 'var(--text-primary)', fontWeight: '600', margin: 0 }}>Physical</h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {['cramps', 'headache', 'bloating', 'fatigue', 'acne', 'back_pain'].map(s => {
+                  const cleanName = s.replace(/_/g, ' ');
+                  const isActive = selectedSymptoms.includes(s);
+                  return (
+                    <button
+                      key={s}
+                      onClick={() => handleToggleSymptom(s)}
+                      style={{
+                        padding: '6px 12px',
+                        borderRadius: '20px',
+                        border: '1px solid',
+                        borderColor: isActive ? 'transparent' : 'var(--card-border)',
+                        background: isActive ? 'var(--accent-rose)' : 'transparent',
+                        color: isActive ? 'white' : 'var(--text-primary)',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      {isActive && '✓ '} {cleanName}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Flow selection */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <h3 className="font-label-md" style={{ color: 'var(--text-primary)', fontWeight: '600', margin: 0 }}>Flow</h3>
+              <div style={{ display: 'flex', gap: '16px' }}>
+                {[
+                  { label: 'Light', val: 1 },
+                  { label: 'Medium', val: 2 },
+                  { label: 'Heavy', val: 3 },
+                ].map(f => {
+                  const isActive = selectedFlow === f.val;
+                  return (
+                    <label 
+                      key={f.val} 
+                      style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--text-secondary)', fontWeight: isActive ? 700 : 500 }}
+                    >
+                      <input 
+                        type="radio" 
+                        name="flowRadio"
+                        checked={isActive} 
+                        onChange={() => setSelectedFlow(f.val)}
+                        style={{ accentColor: 'var(--accent-rose)', cursor: 'pointer' }}
+                      />
+                      {f.label}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            <button 
+              onClick={handleSaveLog}
+              style={{
+                width: '100%',
+                padding: '12px',
+                borderRadius: '8px',
+                border: 'none',
+                background: 'var(--accent-rose)',
+                color: 'white',
+                fontFamily: 'inherit',
+                fontWeight: '700',
+                fontSize: '0.88rem',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(147,73,60,0.15)',
+                transition: 'background-color 0.2s'
+              }}
+              onMouseOver={e => e.target.style.background = 'var(--text-secondary)'}
+              onMouseOut={e => e.target.style.background = 'var(--accent-rose)'}
+            >
+              Save Log
+            </button>
+          </div>
+
+          {/* Historical Trends Teaser Card */}
+          <div className="glass-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <h3 className="font-label-md" style={{ fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--accent-plum)' }}>trending_up</span> 
+              Historical Trend
+            </h3>
+            <p className="font-body-md" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.4 }}>
+              Your average cycle length over the last 6 months is consistent at {profile.averageCycleLength} days.
+            </p>
+            <Link 
+              href="/wellness" 
+              style={{ 
+                fontSize: '0.8rem', 
+                color: 'var(--accent-rose)', 
+                fontWeight: '700', 
+                textDecoration: 'none', 
+                marginTop: '4px',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '2px'
+              }}
+            >
+              View full insights →
+            </Link>
+          </div>
+
+        </div>
+
+      </div>
+
+      <style jsx global>{`
+        .nav-btn {
+          background: transparent;
+          border: 1px solid var(--card-border);
+          color: var(--text-secondary);
+        }
+        .calendar-day-cell:hover {
+          background-color: var(--bg-secondary) !important;
+          color: var(--text-primary) !important;
+        }
+        @media (max-width: 960px) {
+          div[style*="grid-template-columns: repeat(12"] {
+            grid-template-columns: 1fr !important;
+          }
+          div[style*="gridColumn: span 8"],
+          div[style*="gridColumn: span 4"] {
+            grid-column: span 12 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
 
-// Styling components
 const navBtnStyle = {
-  background: 'rgba(232, 165, 152, 0.08)',
-  border: '1px solid rgba(232, 165, 152, 0.25)',
-  borderRadius: '8px',
-  color: 'var(--text-primary)',
-  width: '32px',
-  height: '32px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  cursor: 'pointer',
-  transition: 'background 0.2s',
-};
-
-const cellBaseStyle = {
-  background: 'rgba(255, 255, 255, 0.45)',
-  border: '1px solid rgba(232, 165, 152, 0.12)',
-  borderRadius: '12px',
-  height: '42px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: 'var(--text-primary)',
-  fontSize: '0.85rem',
-  fontWeight: '500',
-  cursor: 'pointer',
-  transition: 'all 0.2s ease',
-  fontFamily: 'var(--font-sans)',
-};
-
-const legendItemStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px',
-};
-
-const legendDotStyle = {
-  width: '10px',
-  height: '10px',
-  borderRadius: '3px',
-  display: 'inline-block',
-};
-
-const legendLabelStyle = {
-  fontSize: '0.75rem',
+  background: 'transparent',
+  border: '1px solid var(--card-border)',
   color: 'var(--text-secondary)',
-  fontWeight: '500',
-};
-
-const detailsBoxStyle = {
-  background: 'rgba(255, 255, 255, 0.6)',
-  border: '1px solid rgba(232, 165, 152, 0.15)',
-  borderRadius: '12px',
-  padding: '10px 14px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '2px',
-};
-
-const detailsTitleStyle = {
-  fontSize: '0.75rem',
-  color: 'var(--text-muted)',
-  fontWeight: '600',
-  textTransform: 'uppercase',
+  width: '36px',
+  height: '36px',
+  borderRadius: '50%',
   display: 'flex',
   alignItems: 'center',
-  gap: '4px',
-};
-
-const detailsValueStyle = {
-  fontSize: '0.95rem',
-  fontWeight: '600',
-  color: 'var(--text-primary)',
-};
-
-const symptomBadgeStyle = {
-  fontSize: '0.75rem',
-  background: 'rgba(232, 165, 152, 0.12)',
-  border: '1px solid rgba(232, 165, 152, 0.25)',
-  color: 'var(--accent-rose)',
-  padding: '2px 8px',
-  borderRadius: '20px',
-  textTransform: 'capitalize',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  transition: 'all 0.2s'
 };

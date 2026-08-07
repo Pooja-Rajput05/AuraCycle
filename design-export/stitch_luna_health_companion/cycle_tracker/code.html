@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LunaWell - Cycle Tracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#f5ece9",
+                    "tertiary-container": "#aca49b",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed": "#cceace",
+                    "primary-fixed": "#ffdad4",
+                    "background": "#fff8f6",
+                    "on-secondary-fixed-variant": "#334d38",
+                    "outline-variant": "#dac1bd",
+                    "on-secondary-container": "#4e6952",
+                    "inverse-on-surface": "#f8efec",
+                    "primary-container": "#e88d7d",
+                    "surface-container-highest": "#e9e1de",
+                    "on-secondary-fixed": "#07200f",
+                    "surface": "#fff8f6",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#ffb4a7",
+                    "on-primary-fixed": "#3c0703",
+                    "inverse-primary": "#ffb4a7",
+                    "surface-bright": "#fff8f6",
+                    "on-error-container": "#93000a",
+                    "on-primary-container": "#66271c",
+                    "on-surface": "#1e1b19",
+                    "surface-container-high": "#efe6e3",
+                    "surface-tint": "#93493c",
+                    "surface-variant": "#e9e1de",
+                    "inverse-surface": "#342f2e",
+                    "error-container": "#ffdad6",
+                    "outline": "#87726f",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#763227",
+                    "on-tertiary-container": "#403a33",
+                    "tertiary-fixed-dim": "#cec5bc",
+                    "secondary-container": "#c9e8cb",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary": "#4a654e",
+                    "tertiary": "#645d56",
+                    "surface-container-low": "#fbf2ef",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#93493c",
+                    "tertiary-fixed": "#ebe1d7",
+                    "surface-dim": "#e1d8d5",
+                    "on-tertiary-fixed": "#1f1b15",
+                    "on-background": "#1e1b19",
+                    "on-surface-variant": "#544340",
+                    "on-tertiary-fixed-variant": "#4c463f",
+                    "secondary-fixed-dim": "#b0ceb2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "container-padding-desktop": "40px",
+                    "gutter": "16px",
+                    "stack-md": "12px",
+                    "base": "8px",
+                    "container-padding-mobile": "20px",
+                    "stack-sm": "4px",
+                    "stack-lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "label-sm": [
+                            "Be Vietnam Pro"
+                    ],
+                    "label-md": [
+                            "Be Vietnam Pro"
+                    ],
+                    "display-lg": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "body-md": [
+                            "Be Vietnam Pro"
+                    ],
+                    "headline-md": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "headline-lg": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "body-lg": [
+                            "Be Vietnam Pro"
+                    ]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": [
+                            "28px",
+                            {
+                                    "lineHeight": "36px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "16px",
+                                    "letterSpacing": "0.04em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0.01em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "display-lg": [
+                            "40px",
+                            {
+                                    "lineHeight": "48px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "32px",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "40px",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- Top Navigation -->
+<header class="bg-background dark:bg-background w-full top-0 sticky z-50">
+<div class="flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop py-4 max-w-[1200px] mx-auto">
+<div class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">LunaWell</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Dashboard</a>
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 font-bold hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md opacity-80 transition-opacity" href="#">Tracker</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Insights</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 font-label-md text-label-md" href="#">Wellness</a>
+</nav>
+<div class="flex items-center gap-gutter">
+<button aria-label="notifications" class="text-primary dark:text-primary-fixed-dim hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-high border border-outline-variant">
+<img alt="User profile settings" class="w-full h-full object-cover" data-alt="A small, circular avatar image showing a calming, abstract blend of warm sand and soft sage green watercolor washes, representing a user profile picture in a wellness app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCVq5bF-kmdniP4VVsnLWMF2hn3MhMsk9r7sv7Qb-unAXqSxf2c0Z8Ab9ZWq85H6q6QNWmsXoWMGAKuZatznN1X4Cqy77WriRnDD5lNryYMI5HGgg_rdzChgIU7AdEqIerMn6d4TlrAZ0J7wi-URikRLnBIe-TMamQShZ0doGGFA2hmBxzinTlP0JyTb85aXlnRY7N-LeBxURRwTZi2YgcZBlFobxeNh0EkGqHNY8zAVZiqikVtoKZ"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[1200px] mx-auto px-container-padding-mobile md:px-container-padding-desktop py-stack-lg grid grid-cols-1 lg:grid-cols-12 gap-stack-lg">
+<!-- Left Column: Calendar & Overview -->
+<div class="lg:col-span-8 flex flex-col gap-stack-lg">
+<!-- Hero Insight Card -->
+<div class="bg-tertiary text-on-tertiary rounded-lg p-stack-lg flex flex-col md:flex-row items-center justify-between shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col gap-stack-sm text-center md:text-left mb-stack-md md:mb-0">
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg">Day 14 of Cycle</h1>
+<p class="font-body-md text-body-md opacity-90">Ovulation window predicted to begin tomorrow.</p>
+</div>
+<div class="relative w-32 h-32 flex items-center justify-center">
+<!-- Circular Progress representing cycle -->
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="40" stroke="rgba(255,255,255,0.2)" stroke-width="8"></circle>
+<circle cx="50" cy="50" fill="none" r="40" stroke="#ffb4a7" stroke-dasharray="251" stroke-dashoffset="125" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-on-tertiary">14</span>
+<span class="font-label-sm text-label-sm text-on-tertiary opacity-80 uppercase tracking-widest">Days Left</span>
+</div>
+</div>
+</div>
+<!-- Interactive Calendar Card -->
+<div class="bg-surface-container-lowest rounded-lg p-stack-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] flex flex-col gap-stack-md">
+<div class="flex justify-between items-center mb-stack-sm">
+<h2 class="font-headline-md text-headline-md text-on-surface">October 2023</h2>
+<div class="flex gap-base">
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Calendar Grid Header -->
+<div class="grid grid-cols-7 gap-base text-center font-label-sm text-label-sm text-on-surface-variant pb-stack-sm border-b border-surface-variant">
+<div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+</div>
+<!-- Calendar Grid (Simplified for visual representation) -->
+<div class="grid grid-cols-7 gap-base text-center font-body-md text-body-md">
+<!-- Empty slots -->
+<div class="p-2 opacity-30">1</div><div class="p-2 opacity-30">2</div><div class="p-2 opacity-30">3</div>
+<!-- Period Days (Past) -->
+<div class="p-2 rounded-full bg-primary-container text-on-primary-container font-semibold">4</div>
+<div class="p-2 rounded-full bg-primary-container text-on-primary-container font-semibold">5</div>
+<div class="p-2 rounded-full bg-primary-container text-on-primary-container font-semibold">6</div>
+<div class="p-2 rounded-full bg-primary-container text-on-primary-container font-semibold">7</div>
+<div class="p-2 rounded-full bg-primary-container text-on-primary-container font-semibold">8</div>
+<!-- Regular Days -->
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">9</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">10</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">11</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">12</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">13</div>
+<!-- Current Day / Ovulation predicted start -->
+<div class="p-2 rounded-full border-2 border-secondary text-secondary font-bold relative">
+                        14
+                        <span class="absolute -top-1 -right-1 w-2 h-2 bg-secondary rounded-full"></span>
+</div>
+<!-- Predicted Ovulation window -->
+<div class="p-2 rounded-full bg-secondary-container text-on-secondary-container font-semibold">15</div>
+<div class="p-2 rounded-full bg-secondary-container text-on-secondary-container font-semibold">16</div>
+<div class="p-2 rounded-full bg-secondary-container text-on-secondary-container font-semibold">17</div>
+<div class="p-2 rounded-full bg-secondary-container text-on-secondary-container font-semibold">18</div>
+<div class="p-2 rounded-full bg-secondary-container text-on-secondary-container font-semibold">19</div>
+<!-- Future Days -->
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">20</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">21</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">22</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">23</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">24</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">25</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">26</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">27</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">28</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">29</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">30</div>
+<div class="p-2 hover:bg-surface-container-high rounded-full cursor-pointer transition-colors">31</div>
+</div>
+<div class="flex gap-gutter mt-stack-md pt-stack-md border-t border-surface-variant flex-wrap">
+<div class="flex items-center gap-base font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-3 h-3 rounded-full bg-primary-container"></span> Menstruation
+                    </div>
+<div class="flex items-center gap-base font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-3 h-3 rounded-full bg-secondary-container"></span> Fertile Window
+                    </div>
+</div>
+</div>
+</div>
+<!-- Right Column: Logging Sidebar -->
+<div class="lg:col-span-4 flex flex-col gap-stack-lg">
+<div class="bg-surface-container-lowest rounded-lg p-stack-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] flex flex-col gap-stack-lg">
+<div class="flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Log Symptoms</h2>
+<span class="font-label-md text-label-md text-on-surface-variant">Today</span>
+</div>
+<!-- Logging Section: Mood -->
+<div class="flex flex-col gap-stack-md">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">Mood</h3>
+<div class="flex flex-wrap gap-base">
+<button class="px-4 py-2 rounded-xl border border-outline-variant text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent">Calm</button>
+<button class="px-4 py-2 rounded-xl bg-secondary-container text-on-secondary-container font-label-sm text-label-sm transition-colors border border-transparent">Sensitive</button>
+<button class="px-4 py-2 rounded-xl border border-outline-variant text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent">Energized</button>
+<button class="px-4 py-2 rounded-xl border border-outline-variant text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent">Anxious</button>
+</div>
+</div>
+<!-- Logging Section: Physical -->
+<div class="flex flex-col gap-stack-md">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">Physical</h3>
+<div class="flex flex-wrap gap-base">
+<button class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-label-sm text-label-sm transition-colors border border-transparent flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="check">check</span> Cramps
+                        </button>
+<button class="px-4 py-2 rounded-xl border border-outline-variant text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent">Headache</button>
+<button class="px-4 py-2 rounded-xl border border-outline-variant text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent">Bloating</button>
+<button class="px-4 py-2 rounded-xl border border-outline-variant text-on-surface font-label-sm text-label-sm hover:bg-surface-container transition-colors focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent">Fatigue</button>
+</div>
+</div>
+<!-- Logging Section: Flow -->
+<div class="flex flex-col gap-stack-md">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold">Flow</h3>
+<div class="flex gap-gutter">
+<label class="flex flex-col items-center gap-stack-sm cursor-pointer group">
+<div class="w-12 h-12 rounded-full border-2 border-outline-variant flex items-center justify-center group-hover:border-primary transition-colors">
+<div class="w-4 h-4 rounded-full bg-outline-variant group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Light</span>
+<input class="hidden" name="flow" type="radio"/>
+</label>
+<label class="flex flex-col items-center gap-stack-sm cursor-pointer group">
+<div class="w-12 h-12 rounded-full border-2 border-primary flex items-center justify-center">
+<div class="w-6 h-6 rounded-full bg-primary"></div>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Medium</span>
+<input checked="" class="hidden" name="flow" type="radio"/>
+</label>
+<label class="flex flex-col items-center gap-stack-sm cursor-pointer group">
+<div class="w-12 h-12 rounded-full border-2 border-outline-variant flex items-center justify-center group-hover:border-primary transition-colors">
+<div class="w-8 h-8 rounded-full bg-outline-variant group-hover:bg-primary transition-colors"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Heavy</span>
+<input class="hidden" name="flow" type="radio"/>
+</label>
+</div>
+</div>
+<button class="w-full h-12 mt-stack-md bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md rounded-lg transition-colors flex items-center justify-center gap-base shadow-sm">
+                    Save Log <span class="material-symbols-outlined text-[18px]" data-icon="save">save</span>
+</button>
+</div>
+<!-- Historical Trends Teaser -->
+<div class="bg-surface-container rounded-lg p-stack-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-surface-variant">
+<h3 class="font-label-md text-label-md text-on-surface font-semibold mb-stack-md flex items-center gap-base">
+<span class="material-symbols-outlined text-tertiary" data-icon="trending_up">trending_up</span> Historical Trend
+                </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-stack-md">Your average cycle length over the last 6 months is consistent at 28 days.</p>
+<a class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1" href="#">
+                    View full insights <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container dark:bg-surface-container-high w-full mt-auto">
+<div class="w-full py-stack-lg px-container-padding-mobile md:px-container-padding-desktop flex flex-col md:flex-row justify-between items-center gap-base max-w-[1200px] mx-auto">
+<div class="font-headline-md text-headline-md text-primary">LunaWell</div>
+<nav class="flex flex-wrap justify-center gap-gutter">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-label-sm text-label-sm" href="#">Health Resources</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-label-sm text-label-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-label-sm text-label-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors font-label-sm text-label-sm" href="#">Contact Support</a>
+</nav>
+<div class="font-body-md text-body-md text-primary dark:text-primary-fixed-dim text-sm text-center md:text-right">
+                © 2024 LunaWell Health. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

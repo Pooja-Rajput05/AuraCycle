@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LunaWell - Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Be+Vietnam+Pro:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f5ece9",
+                        "tertiary-container": "#aca49b",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#cceace",
+                        "primary-fixed": "#ffdad4",
+                        "background": "#fff8f6",
+                        "on-secondary-fixed-variant": "#334d38",
+                        "outline-variant": "#dac1bd",
+                        "on-secondary-container": "#4e6952",
+                        "inverse-on-surface": "#f8efec",
+                        "primary-container": "#e88d7d",
+                        "surface-container-highest": "#e9e1de",
+                        "on-secondary-fixed": "#07200f",
+                        "surface": "#fff8f6",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#ffb4a7",
+                        "on-primary-fixed": "#3c0703",
+                        "inverse-primary": "#ffb4a7",
+                        "surface-bright": "#fff8f6",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#66271c",
+                        "on-surface": "#1e1b19",
+                        "surface-container-high": "#efe6e3",
+                        "surface-tint": "#93493c",
+                        "surface-variant": "#e9e1de",
+                        "inverse-surface": "#342f2e",
+                        "error-container": "#ffdad6",
+                        "outline": "#87726f",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#763227",
+                        "on-tertiary-container": "#403a33",
+                        "tertiary-fixed-dim": "#cec5bc",
+                        "secondary-container": "#c9e8cb",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#4a654e",
+                        "tertiary": "#645d56",
+                        "surface-container-low": "#fbf2ef",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#93493c",
+                        "tertiary-fixed": "#ebe1d7",
+                        "surface-dim": "#e1d8d5",
+                        "on-tertiary-fixed": "#1f1b15",
+                        "on-background": "#1e1b19",
+                        "on-surface-variant": "#544340",
+                        "on-tertiary-fixed-variant": "#4c463f",
+                        "secondary-fixed-dim": "#b0ceb2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding-desktop": "40px",
+                        "gutter": "16px",
+                        "stack-md": "12px",
+                        "base": "8px",
+                        "container-padding-mobile": "20px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .soft-shadow {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        /* Hide scrollbar for clean horizontal scrolls */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body>
+<!-- TopNavBar -->
+<nav class="w-full top-0 sticky bg-background z-50">
+<div class="flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop py-4 max-w-[1200px] mx-auto bg-background">
+<!-- Brand -->
+<div class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">
+                LunaWell
+            </div>
+<!-- Desktop Nav Links -->
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-label-md text-label-md text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200" href="#">Tracker</a>
+<!-- Active State Logic Applied Here -->
+<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1 font-bold hover:text-primary transition-colors duration-200" href="#">Insights</a>
+<a class="font-label-md text-label-md text-on-surface-variant pb-1 hover:text-primary transition-colors duration-200" href="#">Wellness</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button aria-label="notifications" class="text-on-surface-variant hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:opacity-80 transition-opacity">
+<img alt="User profile settings" class="w-full h-full object-cover" data-alt="A soft, high-key portrait of a calm woman in a brightly lit, minimalist room. The color palette features warm sand, sage green, and soft coral accents. The aesthetic is serene, wellness-focused, and modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxKcuxlqjo8Zt7fOtYavI0uIg6yBE0z9EVbv2-csAkDmCKQ325wNDQdbvaG-nnkAhosthaoH1z6qxc2E-OEe4tD4woVONGzptOjcKevNtPI8tBU81Nl4xrsogNsNdY4IlICCaKPKnADibgCgfmWwXFjQ6qBHV58Z5y1Eqquaf4gu9eG-LTf-wHGjFmYUjf69L5Ryo3P20A5KTcziHBMB3fYSyDpMofLqctqVgWr4ScPr12dMbxaPn8"/>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full px-container-padding-mobile md:px-container-padding-desktop py-stack-lg max-w-[1200px] mx-auto flex flex-col gap-stack-lg">
+<!-- Header Section -->
+<header class="flex flex-col gap-stack-sm mb-stack-md">
+<h1 class="font-display-lg text-display-lg text-on-surface md:text-[40px] text-[32px]">Your Insights</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Understanding your unique patterns. Here's what we've learned over the last 3 months.</p>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter auto-rows-min">
+<!-- Cycle Phase Summary (Spans 8 cols on desktop) -->
+<section class="md:col-span-8 bg-white rounded-xl p-stack-lg soft-shadow flex flex-col gap-stack-md relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary-container rounded-full blur-3xl opacity-20 transform translate-x-1/2 -translate-y-1/2"></div>
+<h2 class="font-headline-md text-headline-md text-on-surface z-10">Current Phase Focus</h2>
+<div class="flex flex-col sm:flex-row gap-stack-lg items-start sm:items-center z-10">
+<!-- Circular Visual -->
+<div class="relative w-32 h-32 flex-shrink-0">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 100 100">
+<!-- Background ring -->
+<circle class="stroke-surface-container-high" cx="50" cy="50" fill="none" r="45" stroke-width="8"></circle>
+<!-- Progress ring -->
+<circle class="stroke-primary" cx="50" cy="50" fill="none" r="45" stroke-dasharray="282.7" stroke-dashoffset="141.35" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Day</span>
+<span class="font-headline-lg text-headline-lg text-primary leading-none">14</span>
+</div>
+</div>
+<div class="flex flex-col gap-stack-sm">
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface">Ovulatory Phase</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Energy levels typically peak right now. It's a great time for social activities and slightly more intense workouts, but remember to stay hydrated.</p>
+<div class="flex flex-wrap gap-base mt-2">
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-4 py-2 rounded-xl inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">directions_run</span> High Energy
+                            </span>
+<span class="bg-primary-container text-on-primary-container font-label-sm text-label-sm px-4 py-2 rounded-xl inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">water_drop</span> Hydration focus
+                            </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Stats (Spans 4 cols on desktop) -->
+<section class="md:col-span-4 bg-tertiary text-on-tertiary rounded-xl p-stack-lg soft-shadow flex flex-col gap-stack-md justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md mb-2">Cycle Length</h2>
+<p class="font-body-md text-body-md text-tertiary-fixed opacity-90">Consistent over last 6 cycles</p>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg leading-none">28</span>
+<span class="font-body-md text-body-md mb-1">days avg</span>
+</div>
+<div class="w-full bg-surface-variant/30 h-1 rounded-full mt-4">
+<div class="bg-on-tertiary h-1 rounded-full w-4/5"></div>
+</div>
+</section>
+<!-- Mood Trends (Spans 12 cols on desktop) -->
+<section class="md:col-span-12 bg-surface-container-lowest rounded-xl p-stack-lg soft-shadow flex flex-col gap-stack-md">
+<div class="flex justify-between items-center flex-wrap gap-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Mood Patterns</h2>
+<select class="bg-surface-container font-label-md text-label-md text-on-surface border-none rounded-lg px-4 py-2 focus:ring-1 focus:ring-secondary">
+<option>Last 3 Months</option>
+<option>Last 6 Months</option>
+<option>This Year</option>
+</select>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">We noticed a slight dip in energy around day 24 of your cycle, correlating with lower sleep quality.</p>
+<!-- Mock Chart Area -->
+<div class="w-full h-64 bg-surface-container-low rounded-lg relative flex items-end justify-between px-4 pb-4 pt-10">
+<!-- Y Axis Labels -->
+<div class="absolute left-2 top-0 bottom-10 flex flex-col justify-between py-4 text-on-surface-variant opacity-60">
+<span class="material-symbols-outlined text-[16px]">sentiment_very_satisfied</span>
+<span class="material-symbols-outlined text-[16px]">sentiment_neutral</span>
+<span class="material-symbols-outlined text-[16px]">sentiment_dissatisfied</span>
+</div>
+<!-- Bars (Mock Data) -->
+<div class="w-full flex justify-between items-end h-full ml-8 gap-1 sm:gap-2">
+<div class="w-full bg-secondary-fixed-dim hover:bg-secondary transition-colors rounded-t-md h-[40%] group relative"></div>
+<div class="w-full bg-secondary-fixed-dim hover:bg-secondary transition-colors rounded-t-md h-[50%]"></div>
+<div class="w-full bg-secondary-fixed-dim hover:bg-secondary transition-colors rounded-t-md h-[70%]"></div>
+<div class="w-full bg-secondary hover:bg-secondary transition-colors rounded-t-md h-[90%] relative">
+<!-- Tooltip mock -->
+<div class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Peak Focus</div>
+</div>
+<div class="w-full bg-secondary-fixed-dim hover:bg-secondary transition-colors rounded-t-md h-[80%]"></div>
+<div class="w-full bg-primary-fixed-dim hover:bg-primary transition-colors rounded-t-md h-[30%]"></div>
+<div class="w-full bg-primary-fixed-dim hover:bg-primary transition-colors rounded-t-md h-[40%]"></div>
+</div>
+</div>
+<!-- X Axis Labels -->
+<div class="flex justify-between ml-12 text-on-surface-variant font-label-sm text-label-sm mt-2">
+<span>Week 1</span>
+<span>Week 2</span>
+<span>Week 3</span>
+<span>Week 4</span>
+</div>
+</section>
+<!-- Personalized Recommendations (Spans 6 cols on desktop) -->
+<section class="md:col-span-6 bg-surface-container-lowest rounded-xl p-stack-lg soft-shadow flex flex-col gap-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Wellness Suggestions</h2>
+<div class="flex flex-col gap-stack-sm">
+<!-- Suggestion Item -->
+<div class="flex items-start gap-4 p-4 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="bg-primary-container text-on-primary-container rounded-full p-2 flex-shrink-0">
+<span class="material-symbols-outlined">self_improvement</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-semibold">Gentle Movement</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 text-sm">Consider yoga or light walking as we approach the luteal phase to manage potential bloating.</p>
+</div>
+</div>
+<!-- Suggestion Item -->
+<div class="flex items-start gap-4 p-4 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors">
+<div class="bg-secondary-container text-on-secondary-container rounded-full p-2 flex-shrink-0">
+<span class="material-symbols-outlined">restaurant</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-semibold">Iron-Rich Foods</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 text-sm">Prep some meals with spinach or lentils to support iron levels in the coming days.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Symptom Frequency (Spans 6 cols on desktop) -->
+<section class="md:col-span-6 bg-surface-container-lowest rounded-xl p-stack-lg soft-shadow flex flex-col gap-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">Symptom Frequency</h2>
+<div class="flex flex-col gap-4 mt-2">
+<!-- Progress bar item -->
+<div>
+<div class="flex justify-between font-label-md text-label-md mb-1">
+<span class="text-on-surface">Headache</span>
+<span class="text-on-surface-variant">4 days/cycle</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full rounded-full w-[40%]"></div>
+</div>
+</div>
+<!-- Progress bar item -->
+<div>
+<div class="flex justify-between font-label-md text-label-md mb-1">
+<span class="text-on-surface">Bloating</span>
+<span class="text-on-surface-variant">6 days/cycle</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-tertiary-container h-full rounded-full w-[60%]"></div>
+</div>
+</div>
+<!-- Progress bar item -->
+<div>
+<div class="flex justify-between font-label-md text-label-md mb-1">
+<span class="text-on-surface">Cramps</span>
+<span class="text-on-surface-variant">2 days/cycle</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full w-[20%]"></div>
+</div>
+</div>
+</div>
+<button class="mt-auto w-full py-3 rounded-lg border border-primary text-primary font-label-md text-label-md hover:bg-primary-container hover:text-on-primary-container transition-colors">
+                    View Full Symptom Log
+                </button>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container">
+<div class="w-full py-stack-lg px-container-padding-mobile md:px-container-padding-desktop flex flex-col md:flex-row justify-between items-center gap-base max-w-[1200px] mx-auto">
+<div class="font-headline-md text-headline-md text-primary">
+                LunaWell
+            </div>
+<div class="flex flex-wrap justify-center gap-4">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Health Resources</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant text-sm text-center md:text-right">
+                © 2024 LunaWell Health. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

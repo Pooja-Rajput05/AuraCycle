@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LunaWell Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#f5ece9",
+                        "tertiary-container": "#aca49b",
+                        "on-tertiary": "#ffffff",
+                        "secondary-fixed": "#cceace",
+                        "primary-fixed": "#ffdad4",
+                        "background": "#fff8f6",
+                        "on-secondary-fixed-variant": "#334d38",
+                        "outline-variant": "#dac1bd",
+                        "on-secondary-container": "#4e6952",
+                        "inverse-on-surface": "#f8efec",
+                        "primary-container": "#e88d7d",
+                        "surface-container-highest": "#e9e1de",
+                        "on-secondary-fixed": "#07200f",
+                        "surface": "#fff8f6",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#ffb4a7",
+                        "on-primary-fixed": "#3c0703",
+                        "inverse-primary": "#ffb4a7",
+                        "surface-bright": "#fff8f6",
+                        "on-error-container": "#93000a",
+                        "on-primary-container": "#66271c",
+                        "on-surface": "#1e1b19",
+                        "surface-container-high": "#efe6e3",
+                        "surface-tint": "#93493c",
+                        "surface-variant": "#e9e1de",
+                        "inverse-surface": "#342f2e",
+                        "error-container": "#ffdad6",
+                        "outline": "#87726f",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#763227",
+                        "on-tertiary-container": "#403a33",
+                        "tertiary-fixed-dim": "#cec5bc",
+                        "secondary-container": "#c9e8cb",
+                        "on-error": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary": "#4a654e",
+                        "tertiary": "#645d56",
+                        "surface-container-low": "#fbf2ef",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#93493c",
+                        "tertiary-fixed": "#ebe1d7",
+                        "surface-dim": "#e1d8d5",
+                        "on-tertiary-fixed": "#1f1b15",
+                        "on-background": "#1e1b19",
+                        "on-surface-variant": "#544340",
+                        "on-tertiary-fixed-variant": "#4c463f",
+                        "secondary-fixed-dim": "#b0ceb2"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding-desktop": "40px",
+                        "gutter": "16px",
+                        "stack-md": "12px",
+                        "base": "8px",
+                        "container-padding-mobile": "20px",
+                        "stack-sm": "4px",
+                        "stack-lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-sm": ["Be Vietnam Pro"],
+                        "label-md": ["Be Vietnam Pro"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "body-md": ["Be Vietnam Pro"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Be Vietnam Pro"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+                        "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky bg-background dark:bg-background flat no shadows z-50">
+<div class="flex justify-between items-center px-container-padding-mobile md:px-container-padding-desktop py-4 max-w-[1200px] mx-auto">
+<div class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">
+                LunaWell
+            </div>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 font-bold font-label-md text-label-md hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200 opacity-80 transition-opacity" href="#">Dashboard</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 font-label-md text-label-md hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200" href="#">Tracker</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 font-label-md text-label-md hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200" href="#">Insights</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant pb-1 font-label-md text-label-md hover:text-primary dark:hover:text-primary-fixed-dim transition-colors duration-200" href="#">Wellness</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden">
+<img alt="User profile settings" class="w-full h-full object-cover" data-alt="A close-up portrait of a relaxed, smiling woman with clear skin, natural lighting, soft wellness aesthetic, muted warm tones, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7nvPc38CJ3-PTiNYEFvopPkIWGboUmEHL-RDkTq3XZGgMJR-dO9mIZERubZb2Xlb51glcfzCEOnOa37YbcJaBjPuLOdMTlU7G76rE0snL5sWVZGSfnCi_YN5ZD8biMVAffL8k4xSShWfkXJ4RZ0zBOUdFkSAYf5XQvezJPiDoQsPIvcKUnwh7Nc_moJyjY82vl_qOPimqYLtoJpwRMHFtrqfKmnqZoO6WiR5gE8baflNaifkm48N7"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Grid -->
+<main class="flex-grow px-container-padding-mobile md:px-container-padding-desktop py-stack-lg max-w-[1200px] mx-auto w-full">
+<div class="mb-stack-lg">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-stack-sm">Good morning, Sarah.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Here is your wellness overview for today.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Cycle Overview (Bento Large) -->
+<div class="col-span-1 md:col-span-8 glass-card rounded-xl p-stack-lg relative overflow-hidden flex flex-col md:flex-row items-center gap-stack-lg">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-container rounded-full mix-blend-multiply filter blur-3xl opacity-20 -mr-20 -mt-20"></div>
+<div class="relative w-48 h-48 flex-shrink-0">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle class="text-surface-container stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="8"></circle>
+<circle class="text-primary stroke-current progress-ring" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="188.4" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-md text-headline-md text-primary">Day 14</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ovulation</span>
+</div>
+</div>
+<div class="flex-grow z-10">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Fertile Window</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-stack-md">You are likely in your fertile window. Your energy levels might peak today.</p>
+<div class="flex gap-4 mt-stack-lg">
+<div class="bg-surface-container rounded-lg p-3 flex-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Next Period</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">14 Days</span>
+</div>
+<div class="bg-surface-container rounded-lg p-3 flex-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-1">Cycle Length</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">28 Days avg</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Daily Insight Card (Bento Small) -->
+<div class="col-span-1 md:col-span-4 bg-tertiary text-on-tertiary rounded-xl p-stack-lg flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+<div>
+<div class="flex items-center gap-2 mb-stack-md">
+<span class="material-symbols-outlined" data-icon="lightbulb">lightbulb</span>
+<span class="font-label-md text-label-md font-bold">Daily Insight</span>
+</div>
+<h3 class="font-headline-md text-headline-md mb-stack-sm">Estrogen Peak</h3>
+<p class="font-body-md text-body-md opacity-90">High estrogen levels today might make you feel more sociable and energetic. It's a great day for a high-intensity workout.</p>
+</div>
+<button class="mt-stack-lg bg-on-tertiary text-tertiary font-label-md text-label-md py-3 px-6 rounded-lg w-full hover:bg-surface-container transition-colors">
+                    Read More
+                </button>
+</div>
+<!-- Wellness Stats Row -->
+<div class="col-span-1 md:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-gutter mt-stack-md">
+<!-- Sleep -->
+<div class="glass-card rounded-xl p-stack-lg flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2 text-secondary mb-2">
+<span class="material-symbols-outlined" data-icon="bedtime">bedtime</span>
+<span class="font-label-md text-label-md">Sleep</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface">7h 45m</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant mt-1">Goal: 8h</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="check" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</div>
+<!-- Mood -->
+<div class="glass-card rounded-xl p-stack-lg flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined" data-icon="mood">mood</span>
+<span class="font-label-md text-label-md">Mood</span>
+</div>
+<div class="flex gap-2">
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-xl font-label-sm text-label-sm">Energetic</span>
+<span class="bg-primary-container text-on-primary-container px-3 py-1 rounded-xl font-label-sm text-label-sm">Calm</span>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full border border-outline-variant text-on-surface-variant flex items-center justify-center hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<!-- Hydration -->
+<div class="glass-card rounded-xl p-stack-lg flex items-center justify-between">
+<div class="w-full">
+<div class="flex items-center justify-between text-tertiary mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+<span class="font-label-md text-label-md">Hydration</span>
+</div>
+<span class="font-label-sm text-label-sm">4 / 8 glasses</span>
+</div>
+<div class="w-full bg-surface-container h-2 rounded-full overflow-hidden mt-3">
+<div class="bg-tertiary h-full rounded-full" style="width: 50%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container dark:bg-surface-container-high w-full mt-auto flat no shadows">
+<div class="w-full py-stack-lg px-container-padding-mobile md:px-container-padding-desktop flex flex-col md:flex-row justify-between items-center gap-base max-w-[1200px] mx-auto">
+<div class="font-headline-md text-headline-md text-primary">
+                LunaWell
+            </div>
+<nav class="flex flex-wrap justify-center gap-4">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Health Resources</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-label-sm text-label-sm hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Contact Support</a>
+</nav>
+<div class="text-on-surface-variant dark:text-on-surface-variant font-body-md text-body-md text-sm">
+                © 2024 LunaWell Health. All rights reserved.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,65 +1,66 @@
 /* AuraCycle Comfort Design System & Global Styles */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 :root, html[data-theme="light"] {
-  /* Comfort Theme Palette - Light, Soft, Warm & Organic */
-  --bg-primary: #fffbfb;
-  --bg-secondary: #fef6f7;
-  --card-bg: rgba(255, 255, 255, 0.82);
-  --card-border: rgba(232, 165, 152, 0.2);
-  --card-hover-border: rgba(232, 165, 152, 0.38);
+  /* Comfort Theme Palette - Light, Soft, Warm & Organic (Stitch-configured) */
+  --bg-primary: #fff8f6;
+  --bg-secondary: #f5ece9;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(147, 73, 60, 0.15);
+  --card-hover-border: rgba(147, 73, 60, 0.35);
   
-  --accent-pink: #f2c6de;
-  --accent-rose: #e8a598;
-  --accent-plum: #7a5965;
-  --accent-coral: #f2a385;
-  --accent-lavender: #d6e2e9;
-  --accent-purple: #c0a9e2;
-  --accent-sage: #8bb09a; /* Comforting wellness green */
+  --accent-pink: #ffb4a7; /* primary-fixed-dim */
+  --accent-rose: #93493c; /* primary terracotta */
+  --accent-plum: #645d56; /* tertiary warm grey */
+  --accent-coral: #e88d7d; /* primary-container */
+  --accent-lavender: #f5ece9; /* surface-container */
+  --accent-purple: #8e73b2;
+  --accent-sage: #4a654e; /* secondary sage green */
   
-  --phase-menstrual: #e8a598; /* Soft Warm Dusty Rose */
-  --phase-follicular: #a6cdd8; /* Calm Soft Blue-Green */
-  --phase-ovulatory: #c0a9e2; /* Soothing Light Orchid */
-  --phase-luteal: #f2a385; /* Sunset Warm Coral */
+  --phase-menstrual: #93493c;
+  --phase-follicular: #4a654e;
+  --phase-ovulatory: #e88d7d;
+  --phase-luteal: #645d56;
   
-  --text-primary: #382733; /* Deep warm plum grey - comforting & legible */
-  --text-secondary: #755e6e;
-  --text-muted: #a5909f;
+  --text-primary: #1e1b19; /* dark chocolate-charcoal font */
+  --text-secondary: #544340;
+  --text-muted: #87726f;
   
-  --glow-pink: rgba(232, 165, 152, 0.12);
-  --glow-purple: rgba(192, 169, 226, 0.15);
+  --glow-pink: rgba(147, 73, 60, 0.08);
+  --glow-purple: rgba(100, 93, 86, 0.08);
 
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: 'Plus Jakarta Sans', Georgia, serif;
 }
 
 html[data-theme="dark"] {
-  /* Comfort Theme Palette - Dark, Soft, Warm Deep Plum */
-  --bg-primary: #120915;
-  --bg-secondary: #1b0e20;
-  --card-bg: rgba(27, 14, 32, 0.75);
-  --card-border: rgba(232, 165, 152, 0.15);
-  --card-hover-border: rgba(232, 165, 152, 0.32);
+  /* Comfort Theme Palette - Dark, Soft, Warm Deep Plum/Chocolate */
+  --bg-primary: #141211;
+  --bg-secondary: #1e1b19;
+  --card-bg: rgba(30, 27, 25, 0.75);
+  --card-border: rgba(255, 180, 167, 0.15);
+  --card-hover-border: rgba(255, 180, 167, 0.3);
   
-  --accent-pink: #dfa6c7;
-  --accent-rose: #e8a598;
-  --accent-plum: #9a7682;
-  --accent-coral: #f2a385;
-  --accent-lavender: #394d5a;
-  --accent-purple: #8e73b2;
-  --accent-sage: #5b7f69;
+  --accent-pink: #ffb4a7;
+  --accent-rose: #ffdad4;
+  --accent-plum: #cec5bc;
+  --accent-coral: #763227;
+  --accent-lavender: #4c463f;
+  --accent-purple: #c0a9e2;
+  --accent-sage: #b0ceb2;
   
-  --phase-menstrual: #e8a598;
-  --phase-follicular: #5b8793;
-  --phase-ovulatory: #8e73b2;
-  --phase-luteal: #f2a385;
+  --phase-menstrual: #ffb4a7;
+  --phase-follicular: #b0ceb2;
+  --phase-ovulatory: #cec5bc;
+  --phase-luteal: #e88d7d;
   
-  --text-primary: #f7f0f5; /* Soft glowing off-white */
-  --text-secondary: #bcaec1;
-  --text-muted: #8a768e;
+  --text-primary: #f8efec;
+  --text-secondary: #dac1bd;
+  --text-muted: #87726f;
   
-  --glow-pink: rgba(232, 165, 152, 0.18);
-  --glow-purple: rgba(142, 115, 178, 0.22);
+  --glow-pink: rgba(255, 180, 167, 0.12);
+  --glow-purple: rgba(192, 169, 226, 0.12);
 }
 
 * {
@@ -101,20 +102,67 @@ body {
 }
 
 /* Glassmorphism utility */
-.glass-panel {
+.glass-panel, .glass-card {
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--card-border);
-  border-radius: 24px;
+  border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 10px 30px rgba(135, 100, 110, 0.035);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
-.glass-panel:hover {
+.glass-panel:hover, .glass-card:hover {
   border-color: var(--card-hover-border);
-  box-shadow: 0 14px 40px rgba(135, 100, 110, 0.07);
   transform: translateY(-2px);
+}
+
+/* Typography styles based on Google Stitch design tokens */
+.font-display-lg {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+.font-headline-lg {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+.font-headline-md {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+}
+.font-body-lg {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 28px;
+  font-weight: 400;
+}
+.font-body-md {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+.font-label-md {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+.font-label-sm {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  font-weight: 600;
 }
 
 /* Glow effects */
@@ -140,11 +188,11 @@ body {
 .app-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  flex: 1;
   width: 100%;
-  max-width: 600px; /* Mobile first layout centered */
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 104px 20px 40px 20px; /* High top padding to sit nicely below navigation */
+  padding: 88px 24px 48px;
   position: relative;
 }
 

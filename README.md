@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🌸 AuraCycle - Bio-Health Wellness & Period Tracker
 
-## Getting Started
+AuraCycle is a compassionate digital bio-health companion built for **Girls HackDays**. It features period cycle prediction, WhatsApp alert integrations, AI Desi Nuskhe remedies, interactive cycle calendars, and 1-click doctor PDF report generation.
 
-First, run the development server:
+---
+
+## 🚀 How to Run AuraCycle on Your Local Machine
+
+### 📋 Prerequisites
+1. Installed **Node.js** (v16 or higher)
+2. Terminal / Command Prompt / VS Code
+
+---
+
+### 🛠️ Step 1: Start Backend Server
+Open your terminal in the root project folder:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. Go to root project directory (if not already there)
+cd "girls hackDays"
+
+# 2. Install backend dependencies (if needed)
+npm install
+
+# 3. Start Backend Node.js Server
+node server.js
 ```
+> 🟢 **Backend will run on:** `http://localhost:5000`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 🎨 Step 2: Start Frontend Application
+Open a **Second Terminal Window**:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# 1. Navigate into frontend folder
+cd frontend
 
-## Learn More
+# 2. Install frontend dependencies
+npm install
 
-To learn more about Next.js, take a look at the following resources:
+# 3. Start Frontend Development Server
+npm run dev
+```
+> 🌸 **Frontend application will open on:** `http://localhost:5173`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ⚡ Quick Testing Tips
+1. Open `http://localhost:5173` in your browser.
+2. Click **Start Tracking Free →** or **Log In / Register**.
+3. Create a new account or sign in to test the interactive Dashboard, Tracker, Insights, and Wellness recommendations!
