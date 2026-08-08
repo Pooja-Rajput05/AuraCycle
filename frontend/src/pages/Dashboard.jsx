@@ -219,7 +219,7 @@ export default function Dashboard() {
 
   // Define active calculations based on standard vs simulation day
   let activeCycleState = initialCycleState;
-  let activeSymptoms = todayLog.symptoms || [];
+  let activeSymptoms = todayLog?.symptoms || [];
 
   if (isSimulating) {
     activeCycleState = calculateCycleState(
@@ -298,18 +298,11 @@ export default function Dashboard() {
     } else if (sleepHrs < 7) {
       recommendations.push({ icon: '⚠️', text: 'Neend thodi kam hui hai. Aaj shaam ko 20 min ka rest lein ya raat ko jaldi soyein.' });
     } else {
-      recommendations.push({ icon: '✅', text: 'Aapne achhi neend li hai! Isse aapka mood aur energy pure din badhiya rahegi.' });
+      recommendations.push({ icon: '✨', text: 'Achhi neend li hai! Isse aapka mood aur energy balanced rahegi.' });
     }
 
-    // 3. Symptom / Phase Guidance
+    // 3. Symptom-based Guidance
     if (symptomsList.includes('cramps')) {
-      recommendations.push({ icon: '☕', text: 'Cramps ke liye: Garam patti (heating pad) use karein aur garam adrak/chamomile chai peeyin.' });
-    } else if (symptomsList.includes('fatigue')) {
-      recommendations.push({ icon: '🌿', text: 'Thakan feel ho rahi hai: 15 minute taazi hawa me walk karein aur heavy work avoid karein.' });
-    } else if (symptomsList.includes('headache') || symptomsList.includes('back_pain')) {
-      recommendations.push({ icon: '🌸', text: 'Body ache ke liye: Light stretching karein aur shaant jagah par 10 min rest karein.' });
-    } else if (phase === 'Menstrual') {
-      recommendations.push({ icon: '🛋️', text: 'Periods Phase: Body ko relax karne dein, heavy workout na karein.' });
     } else if (phase === 'Follicular') {
       recommendations.push({ icon: '✨', text: 'Energy Phase: Aaj naye kaam shuru karne aur active rehne ke liye best din hai.' });
     } else if (phase === 'Ovulatory') {
