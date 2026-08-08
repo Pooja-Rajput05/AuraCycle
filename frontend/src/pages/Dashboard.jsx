@@ -52,11 +52,23 @@ export default function Dashboard() {
       const json = await res.json();
       setData(json);
       
+      // Read stored user from localStorage first (set via Navigation inline edit or Register)
+      let localUserName = '';
+      try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const userObj = JSON.parse(storedUser);
+          localUserName = userObj.name || '';
+        }
+      } catch {}
+
       if (json.profile) {
-        setName(json.profile.name || '');
+        setName(localUserName || json.profile.name || '');
         setLastPeriodDate(json.profile.lastPeriodDate || '');
         setCycleLength(json.profile.averageCycleLength || 28);
         setPeriodLength(json.profile.periodLength || 5);
+      } else if (localUserName) {
+        setName(localUserName);
       }
 
       // Fetch logs
@@ -344,7 +356,7 @@ export default function Dashboard() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
         <div>
           <h1 className="font-display-lg" style={{ color: 'var(--text-primary)', margin: 0 }}>
-            {getGreeting()}, {profile?.name || 'there'}.
+            {getGreeting()}, {name || profile?.name || 'there'}.
           </h1>
           <p className="font-body-lg" style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>
             Here is your wellness overview for today.
