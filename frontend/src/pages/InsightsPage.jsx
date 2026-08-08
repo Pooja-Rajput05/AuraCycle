@@ -192,9 +192,9 @@ export default function InsightsPage() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {(wellnessSuggestions.length > 0 ? wellnessSuggestions : [
-                { icon: 'directions_walk', title: '🏃‍♀️ Sahi Exercise Target', description: 'Aaj heavy workout avoid karein — sirf light walking aur gentle stretching karein.' },
-                { icon: 'restaurant', title: '🥗 Healthy Diet Advice', description: 'Garam paani, ginger tea, spinach aur iron-rich khana khaayein.' },
-                { icon: 'local_fire_department', title: '⚡ Cramps Relief Desi Nuskha', description: 'Lower belly par hot water bag rakhein aur ajwain-warm water piyein.' }
+                { icon: 'directions_walk', title: '🏃‍♀️ Recommended Exercise', description: 'Avoid heavy intense workouts today — focus on light walking and gentle stretching.' },
+                { icon: 'restaurant', title: '🥗 Healthy Diet Advice', description: 'Sip warm fluids, ginger tea, and eat leafy greens or iron-rich healthy foods.' },
+                { icon: 'local_fire_department', title: '⚡ Natural Cramp Relief', description: 'Apply a hot water bottle to your lower abdomen and enjoy warm herbal chamomile tea.' }
               ]).slice(0, 3).map((s) => (
                 <div key={s.title} style={{ background: 'var(--bg-secondary)', padding: '14px', borderRadius: '16px', border: '1px solid var(--card-border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>

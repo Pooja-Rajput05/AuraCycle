@@ -914,10 +914,10 @@ export default function Dashboard() {
             <div style={{ marginTop: '8px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', lineHeight: '1.4' }}>
               {(() => {
                 const s = todayLog?.sleep || 0;
-                if (s === 0) return '👉 Upar question me aaj ki sleep input karke save karein.';
-                if (s < 7) return `⚠️ Sleep kam hai! ${(8 - s).toFixed(1)} ghante aur soona chahiye. Aaj raat jaldi soyein.`;
-                if (s >= 7 && s <= 9) return `✅ Bilkul perfect sleep! Aaj energy levels top rehne wale hain.`;
-                return `😴 Normal se jyada (${s}h) sleep li hai. Aaj thoda active rahne ki koshish karein.`;
+                if (s === 0) return '👉 Log your sleep hours above to see recommendations.';
+                if (s < 7) return `⚠️ Sleep is low. ${(8 - s).toFixed(1)} more hours recommended tonight. Rest early.`;
+                if (s >= 7 && s <= 9) return `✅ Optimal Sleep! Your energy levels will stay high today.`;
+                return `😴 Sleep logged (${s}h) is above average. Stay gently active today.`;
               })()}
             </div>
           </div>
@@ -948,10 +948,10 @@ export default function Dashboard() {
             <div style={{ marginTop: '8px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', lineHeight: '1.4' }}>
               {(() => {
                 const m = todayLog?.mood || 0;
-                if (m === 0) return '👉 Upar se mood select karein taaki personalized tips milein.';
-                if (m <= 2) return `🌸 Rest & Self-care mode: Aaj light work karein aur garam chai/water lijiye.`;
-                if (m === 3) return `🌿 Balanced state: Regular routine continue karein.`;
-                return `🚀 High Energy: Creative work ya workout ke liye best din hai!`;
+                if (m === 0) return '👉 Select your mood above for personalized wellness tips.';
+                if (m <= 2) return `🌸 Rest & Self-care mode: Keep workload light and enjoy warm fluids.`;
+                if (m === 3) return `🌿 Balanced state: Continue your steady daily routine.`;
+                return `🚀 High Energy: Great day for creative work or an active workout!`;
               })()}
             </div>
           </div>
@@ -1071,10 +1071,10 @@ export default function Dashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justify: 'center', height: '140px', color: 'var(--text-muted)', textAlign: 'center', gap: '8px' }}>
               <span className="material-symbols-outlined" style={{ fontSize: '32px', color: 'var(--accent-rose)' }}>spa</span>
               <p className="font-body-md" style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--text-secondary)', margin: 0 }}>
-                Aaj koi discomfort log nahi hua hai 🎉
+                No physical discomfort logged for today 🎉
               </p>
               <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', margin: 0 }}>
-                Upar log card me symptom select karke save karein, yahan 2+ gharelu nuskhe dikhayenge!
+                Select a symptom in the log form above to view personalized natural Desi Nuskhe remedies!
               </p>
             </div>
           )}
