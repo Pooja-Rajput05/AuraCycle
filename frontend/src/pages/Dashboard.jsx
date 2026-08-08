@@ -800,7 +800,7 @@ export default function Dashboard() {
             {/* Quick Symptoms Selection */}
             <div style={{ gridColumn: '1 / -1', background: 'var(--bg-primary)', padding: '14px', borderRadius: '16px', border: '1px solid var(--card-border)' }}>
               <span className="font-label-sm" style={{ fontWeight: 700, color: 'var(--accent-rose)', display: 'block', marginBottom: '8px' }}>
-                🩹 Kuch discomfort feel hua?
+                🩹 Discomfort Symptoms Log
               </span>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 {[
@@ -1055,7 +1055,7 @@ export default function Dashboard() {
               {remedies.map((remedy) => (
                 <div key={remedy.symptom} style={{ background: 'rgba(255, 255, 255, 0.6)', padding: '12px 14px', borderRadius: '12px', border: '1px solid var(--card-border)' }}>
                   <div style={{ fontSize: '0.9rem', fontWeight: '800', color: 'var(--accent-rose)', marginBottom: '8px' }}>
-                    {remedy.symptom} Gharelu Nuskhe
+                    {remedy.symptom} Natural Remedies
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {remedy.remedies.map((remText, idx) => (
