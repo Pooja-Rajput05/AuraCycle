@@ -165,71 +165,71 @@ export function getSymptomRemedies(symptoms = []) {
     cramps: {
       symptom: "⚡ Menstrual Cramps",
       remedies: [
-        "🔥 **Garam Patti / Hot Water Bag**: Lower abdomen par 15-20 min garam paani ki botal ya heating pad rakhein, isse muscles turant relax hongi.",
-        "☕ **Adrak aur Tulsi ki Chai**: Garam paani me thodi adrak aur tulsi ubaal kar peeyin, isse dard me bohot aaram milega."
+        "🔥 **Heating Pad / Hot Compress**: Place a hot water bag or heating pad on your lower abdomen for 15-20 minutes to instantly relax uterine muscles.",
+        "☕ **Ginger & Tulsi Herbal Tea**: Boil fresh ginger slices and holy basil leaves in water. Drink warm for natural anti-inflammatory pain relief."
       ]
     },
     bloating: {
-      symptom: "🎈 Bloating / Pet Phulna",
+      symptom: "🎈 Abdominal Bloating",
       remedies: [
-        "🍵 **Ajwain & Saunf Paani**: 1 chammach saunf aur ajwain ko ubaal kar gunguna paani peeyin, gas aur pet ki sujan turant kam hogi.",
-        "🚶‍♀️ **10-Min Soft Walk**: Khane ke baad 10-15 minute halki walk karein, carbonated cold drinks aur zyada namak avoid karein."
+        "🍵 **Carom (Ajwain) & Fennel Water**: Boil 1 teaspoon of fennel (saunf) and carom seeds in water. Sip warm to quickly reduce gas and swelling.",
+        "🚶‍♀️ **10-Minute Gentle Walk**: Take a light 10-15 minute walk after meals, and avoid carbonated sodas and excess salt intake."
       ]
     },
     headache: {
-      symptom: "🤕 Sir Dard / Headache",
+      symptom: "🤕 Hormonal Headache",
       remedies: [
-        "💧 **Gunguna Paani & Nimbu**: Pehle 2 glass gunguna paani peeyin kyunki sir dard aksar dehydration ki wajah se hota hai.",
-        "💆‍♀️ **Teel / Badam Oil Massage**: Kankhi aur sar par halki badam ya til ke tel se massage karke 10 min aakhein band karke soyein."
+        "💧 **Warm Lemon Water**: Drink 2 large glasses of warm water right away, as menstrual headaches are frequently triggered by dehydration.",
+        "💆‍♀️ **Temple Oil Massage**: Gently massage your temples and forehead with warm almond or sesame oil, then rest in a dark, quiet room for 10 minutes."
       ]
     },
     fatigue: {
-      symptom: "😴 Thakan / Low Energy",
+      symptom: "😴 Fatigue & Low Energy",
       remedies: [
-        "🍌 **Kela aur Khajur (Banana & Dates)**: Natural sugar aur potassium ke liye 1 kela ya 2 khajur khayein, instant energy milegi.",
-        "🛋️ **20-Min Power Nap**: Shaam ko 20 minute ki shanti se nap lein aur chai/coffee ki jagah halka gunguna doodh peeyin."
+        "🍌 **Banana & Dates Energy Boost**: Eat 1 fresh banana or 2 dates for natural potassium and healthy fruit sugars to replenish energy.",
+        "🛋️ **20-Minute Rest**: Take a short 20-minute power rest in the afternoon and replace heavy caffeine with warm golden turmeric milk."
       ]
     },
     back_pain: {
-      symptom: "🦴 Kamar Dard / Back Pain",
+      symptom: "🦴 Lower Back Pain",
       remedies: [
-        "🧘‍♀️ **Child's Pose (Balasana)**: Zameen par ghutne mod kar aage jhukne wali stretch (Child's Pose) 5 min karein.",
-        "🛏️ **Kamar ke niche Takiya**: Sote waqt kamar ya ghutno ke niche takiya (pillow) lagayein taaki spine par pressure kam ho."
+        "🧘‍♀️ **Child's Pose Stretch**: Perform a gentle 5-minute Child's Pose (Balasana) stretch on a yoga mat to relieve lumbar spinal pressure.",
+        "🛏️ **Pillow Support**: Place a soft pillow under your knees or lower back while sleeping to maintain proper spinal alignment."
       ]
     },
     acne: {
-      symptom: "✨ Pimples / Acne",
+      symptom: "✨ Hormonal Acne & Pimples",
       remedies: [
-        "🌿 **Neem / Neem Water Cleanse**: Chehre ko thande paani se dhoyin, face par barf (ice cube) rumaal me lapet kar 2 min lagayein.",
-        "🍵 **Haldi-Doodh / Spearmint Tea**: Raat ko gungune doodh me ek chutki haldi mila kar peeyin, skin inflammation kam hogi."
+        "🌿 **Cold Ice Compress**: Gently press an ice cube wrapped in a clean cotton cloth over inflamed pimples for 2 minutes to reduce redness.",
+        "🍵 **Turmeric Milk / Herbal Tea**: Sip a cup of warm milk with a pinch of organic turmeric before bedtime for its natural antibacterial properties."
       ]
     },
     mood_swings: {
-      symptom: "🌊 Mood Swings / Chidchidapan",
+      symptom: "🌊 Mood Swings & Irritability",
       remedies: [
-        "🍫 **Dark Chocolate (70%+)**: 1-2 small piece dark chocolate khayein, isse serotonin (happy hormone) release hota hai.",
-        "🎶 **Music & Deep Breathing**: 5 min ke liye lambi gehri saas lein (Inhale-Exhale) aur apna favorite soothing music suneyin."
+        "🍫 **Dark Chocolate (70%+)**: Enjoy 1-2 small squares of dark chocolate to stimulate natural serotonin (the happy hormone) release.",
+        "🎶 **Deep Breathing & Soothing Music**: Practice 5 minutes of slow, deep breathing while listening to calming ambient music."
       ]
     },
     cravings: {
-      symptom: "🍫 Cravings / Meetha Khane ka Man",
+      symptom: "🍫 Sugar & Junk Food Cravings",
       remedies: [
-        "🍇 **Meethe Phal (Fruits) & Makhane**: Unhealthy junk food ki jagah seb, anar ya roasted makhane khayein.",
-        "🥜 **Badam & Akhrot (Nuts)**: 4-5 bhige hue badam aur akhrot khayein, isse stomach full rahega aur craving shant hogi."
+        "🍇 **Fresh Fruits & Roasted Makhana**: Replace processed junk food with fresh apple slices, pomegranate, or crunchy roasted lotus seeds.",
+        "🥜 **Soaked Almonds & Walnuts**: Snack on 4-5 soaked almonds and walnuts. Healthy fats keep your stomach full and curb sudden sugar spikes."
       ]
     },
     nausea: {
-      symptom: "🤢 Ji Machlana / Nausea",
+      symptom: "🤢 Nausea & Queasiness",
       remedies: [
-        "🍋 **Nimbu-Kala Namak**: Ek glass thande paani me thoda nimbu aur kala namak mila kar sip-sip karke peeyin.",
-        "🌱 **Pudina (Mint) Leaves**: 2-3 pudine ki pattiya chabayein ya unka ras peeyin, ulti jaisa lagna turant band hoga."
+        "🍋 **Lemon & Black Salt Tonic**: Mix fresh lemon juice and a pinch of black salt in cool water. Sip slowly to settle an upset stomach.",
+        "🌱 **Fresh Mint Leaves**: Chew 2-3 fresh mint leaves or sip mint tea to relieve morning or period-related nausea instantly."
       ]
     },
     breast_tenderness: {
-      symptom: "🌸 Chest / Breast Sensitivity",
+      symptom: "🌸 Breast Sensitivity",
       remedies: [
-        "🧊 **Cold Compress**: Rumaal me barf lapet kar 5 min halki sekai karein.",
-        "👚 **Soft Supportive Bra**: Tight bra avoid karein aur soft cotton comfortable innerwear pehnein."
+        "🧊 **Gentle Cool Compress**: Apply a cool damp cloth or ice pack wrapped in a towel for 5 minutes over tender areas.",
+        "👚 **Soft Cotton Innerwear**: Wear non-wired, soft, breathable cotton innerwear to minimize friction and pressure."
       ]
     }
   };
