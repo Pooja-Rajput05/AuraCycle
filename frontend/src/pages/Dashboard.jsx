@@ -297,30 +297,31 @@ export default function Dashboard() {
 
     // 1. Water Guidance
     if (waterGlasses === 0) {
-      recommendations.push({ icon: '💧', text: 'Aaj 8 glass (2 Liters) paani zaroor peeyin taaki body hydrated rahe.' });
+      recommendations.push({ icon: '💧', text: 'Drink at least 8 glasses (2 Liters) of water today to keep your body hydrated.' });
     } else if (waterGlasses < 8) {
-      recommendations.push({ icon: '💧', text: `Aaj ${8 - waterGlasses} glass paani aur peeyin. Paani peene se tiredness aur cramps kam hote hain.` });
+      recommendations.push({ icon: '💧', text: `Drink ${8 - waterGlasses} more glasses of water. Staying hydrated reduces cramps and fatigue.` });
     } else {
-      recommendations.push({ icon: '🎉', text: 'Shabash! Aaj aapne apna daily paani ka target (2L) poora kar liya hai.' });
+      recommendations.push({ icon: '🎉', text: 'Great job! You have reached your daily hydration goal (2 Liters).' });
     }
 
     // 2. Sleep Guidance
     if (sleepHrs === 0) {
-      recommendations.push({ icon: '🌙', text: 'Aaj raat kam se kam 7 se 8 ghante ki achhi neend zaroor lein.' });
+      recommendations.push({ icon: '🌙', text: 'Aim for at least 7 to 8 hours of restful sleep tonight.' });
     } else if (sleepHrs < 7) {
-      recommendations.push({ icon: '⚠️', text: 'Neend thodi kam hui hai. Aaj shaam ko 20 min ka rest lein ya raat ko jaldi soyein.' });
+      recommendations.push({ icon: '⚠️', text: 'Sleep was a bit low. Take a 20-minute power rest this afternoon or sleep early tonight.' });
     } else {
-      recommendations.push({ icon: '✨', text: 'Achhi neend li hai! Isse aapka mood aur energy balanced rahegi.' });
+      recommendations.push({ icon: '✨', text: 'Great sleep! This will keep your energy and mood balanced throughout the day.' });
     }
 
-    // 3. Symptom-based Guidance
+    // 3. Symptom & Phase Guidance
     if (symptomsList.includes('cramps')) {
+      recommendations.push({ icon: '☕', text: 'For cramps: Sip warm ginger-jaggery tea and use a hot water heating pad.' });
     } else if (phase === 'Follicular') {
-      recommendations.push({ icon: '✨', text: 'Energy Phase: Aaj naye kaam shuru karne aur active rehne ke liye best din hai.' });
+      recommendations.push({ icon: '✨', text: 'Energy Phase: Excellent day to start new tasks and stay active.' });
     } else if (phase === 'Ovulatory') {
-      recommendations.push({ icon: '🌟', text: 'Peak Energy: Aaj aapka mood aur stamina best rahega, exercise zaroor karein.' });
+      recommendations.push({ icon: '🌟', text: 'Peak Energy: Your mood and stamina are at their highest today. Great for workouts!' });
     } else {
-      recommendations.push({ icon: '🍵', text: 'Luteal Phase: Sone se pehle caffeine/coffee avoid karein aur halka khana khayein.' });
+      recommendations.push({ icon: '🍵', text: 'Luteal Phase: Avoid late caffeine, eat light meals, and rest early.' });
     }
 
     return recommendations;
@@ -737,7 +738,7 @@ export default function Dashboard() {
             {/* Quick Water Direct Input */}
             <div style={{ background: 'var(--bg-primary)', padding: '14px', borderRadius: '16px', border: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <span className="font-label-sm" style={{ fontWeight: 700, color: '#0284c7', display: 'block' }}>
-                💧 Aaj kitna paani piya?
+                💧 Water Intake Today (ml)
               </span>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <input
@@ -983,17 +984,17 @@ export default function Dashboard() {
 
             <div style={{ marginTop: '10px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', lineHeight: '1.4' }}>
               {(() => {
-                if (todayWater === 0) return '👉 Upar paani (ml) enter karke save karein.';
+                if (todayWater === 0) return '👉 Enter your water intake (in ml) above to log.';
                 if (todayWater < 2000) {
                   const remMl = 2000 - todayWater;
                   const remGlasses = Math.ceil(remMl / 250);
-                  return `💧 Paani kam hai! Target poora karne ke liye ${remMl} ml (${remGlasses} glasses) paani aur peena hai.`;
+                  return `💧 Hydration tip: Drink ${remMl} ml (${remGlasses} glasses) more to reach your daily 2L goal.`;
                 }
                 if (todayWater >= 2000 && todayWater <= 3000) {
                   return `🎉 Perfect Hydration! Daily target achieved (2.0 Liters).`;
                 }
                 const extraMl = todayWater - 3000;
-                return `⚠️ Over-hydration warning! Normal target (2L) se ${extraMl} ml jyada piya hai. Abhi thoda pause lein.`;
+                return `⚠️ Hydration Notice: You logged ${extraMl} ml over the standard 2L target. Take a gentle pause.`;
               })()}
             </div>
           </div>
