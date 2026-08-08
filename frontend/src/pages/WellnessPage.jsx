@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GlassWater, Moon, Flame, Sparkles, Coffee, CheckCircle2 } from 'lucide-react';
 import { useToast } from '../components/ToastProvider';
 import { calculateCycleState } from '../lib/cycleCalculator';
+import YogaExerciseVisualizer from '../components/YogaExerciseVisualizer';
 
 export default function WellnessPage() {
   const { toast } = useToast();
@@ -235,32 +236,8 @@ export default function WellnessPage() {
           </div>
         </div>
 
-        {/* Card 3: Phase Exercises & Yoga */}
-        <div className="glass-card animated-bento-card" style={{ gridColumn: 'span 6', padding: '24px', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--card-border)', paddingBottom: '10px' }}>
-            <Flame size={20} style={{ color: 'var(--accent-rose)' }} />
-            <h3 className="font-headline-md" style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)' }}>
-              🧘‍♀️ Recommended Yoga & Exercise
-            </h3>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--bg-secondary)', padding: '10px 14px', borderRadius: '14px', border: '1px solid var(--card-border)' }}>
-              <span style={{ fontSize: '1.4rem' }}>🦋</span>
-              <div>
-                <strong style={{ fontSize: '0.84rem', color: 'var(--text-primary)', display: 'block' }}>Baddha Konasana (Butterfly Pose)</strong>
-                <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>Relieves pelvic muscle tension & lower abdominal tightness.</span>
-              </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--bg-secondary)', padding: '10px 14px', borderRadius: '14px', border: '1px solid var(--card-border)' }}>
-              <span style={{ fontSize: '1.4rem' }}>🧘‍♀️</span>
-              <div>
-                <strong style={{ fontSize: '0.84rem', color: 'var(--text-primary)', display: 'block' }}>Child's Pose (Balasana)</strong>
-                <span style={{ fontSize: '0.76rem', color: 'var(--text-secondary)' }}>Calms lower back strain and relaxes nervous system.</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Card 3: Symptom-Targeted Animated Yoga & Exercise Visualizer */}
+        <YogaExerciseVisualizer phase={cycleState.phase} loggedSymptoms={todayLog?.symptoms || []} />
 
         {/* Card 4: Sleep & Mind Self-Care */}
         <div className="glass-card animated-bento-card" style={{ gridColumn: 'span 6', padding: '24px', borderRadius: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>

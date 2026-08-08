@@ -6,6 +6,7 @@ import { Settings, RefreshCw, Eye, Sparkles, AlertCircle, HeartHandshake, CheckS
 import CycleRing from '../components/CycleRing';
 import LogModal from '../components/LogModal';
 import OnboardingModal from '../components/OnboardingModal';
+import PersonalChatbot from '../components/PersonalChatbot';
 import { useToast } from '../components/ToastProvider';
 import { calculateCycleState, getSymptomRemedies } from '../lib/cycleCalculator';
 
@@ -229,19 +230,22 @@ export default function Dashboard() {
   const todayLog = logs.find(l => l.date === todayStr) || null;
   const todayWater = todayLog ? (todayLog.water || 0) : 0;
 
-  // Define active calculations based on standard vs simulation day
-  let activeCycleState = initialCycleState;
+  // Define active calculations based on lastPeriodDate, cycleLength, periodLength
+  const effectiveLastPeriodDate = lastPeriodDate || profile?.lastPeriodDate;
+  const effectiveCycleLength = isSimulating ? Number(cycleLength) : (profile?.averageCycleLength || Number(cycleLength) || 28);
+  const effectivePeriodLength = isSimulating ? Number(periodLength) : (profile?.periodLength || Number(periodLength) || 5);
+
+  let activeCycleState = calculateCycleState(
+    effectiveLastPeriodDate,
+    effectiveCycleLength,
+    effectivePeriodLength,
+    new Date(),
+    isSimulating ? simDay : null
+  );
+
   let activeSymptoms = todayLog?.symptoms || [];
 
   if (isSimulating) {
-    activeCycleState = calculateCycleState(
-      lastPeriodDate || profile?.lastPeriodDate,
-      Number(cycleLength),
-      Number(periodLength),
-      new Date(),
-      simDay
-    );
-
     // Mock symptoms in simulator mode
     if (simDay >= 1 && simDay <= Number(periodLength)) {
       activeSymptoms = ['cramps', 'fatigue'];
@@ -384,6 +388,80 @@ export default function Dashboard() {
         </button>
       </div>
 
+      {/* Prominent Top Interactive AI Assistant Banner */}
+      <div 
+        className="glass-card animated-bento-card"
+        style={{
+          background: 'linear-gradient(135deg, rgba(147, 73, 60, 0.09) 0%, rgba(74, 101, 78, 0.08) 100%)',
+          border: '1.5px solid rgba(147, 73, 60, 0.25)',
+          padding: '18px 24px',
+          borderRadius: '24px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+          boxShadow: '0 8px 24px rgba(147, 73, 60, 0.08)'
+        }}
+      >
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div 
+              style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, var(--accent-rose) 0%, #7a3a2e 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                boxShadow: '0 4px 14px rgba(147, 73, 60, 0.3)',
+                position: 'relative'
+              }}
+            >
+              <Sparkles size={24} color="#ffd700" />
+              <span style={{ position: 'absolute', top: '2px', right: '2px', width: '10px', height: '10px', borderRadius: '50%', background: '#4ade80', border: '2px solid white' }}></span>
+            </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                  AuraBot Personal Health Assistant
+                </h3>
+                <span style={{ fontSize: '0.7rem', background: 'rgba(74, 101, 78, 0.15)', color: 'var(--accent-sage)', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
+                  Active AI
+                </span>
+              </div>
+              <p style={{ margin: '3px 0 0 0', fontSize: '0.86rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                Ask anything right here about your <strong>{activeCycleState?.phase || 'Follicular'} Phase</strong>, cramp remedies, or water goals!
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => navigate('/chatbot')}
+            style={{
+              background: 'linear-gradient(135deg, var(--accent-rose) 0%, #7a3a2e 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '20px',
+              padding: '10px 22px',
+              fontSize: '0.88rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              boxShadow: '0 6px 18px rgba(147, 73, 60, 0.3)',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={e => e.currentTarget.style.transform = 'scale(1.04)'}
+            onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <span>Open AI Chat Page →</span>
+            <Sparkles size={16} color="#ffd700" />
+          </button>
+        </div>
+      </div>
+
       {/* Settings Form (Toggleable Panel) */}
       {showSettings && (
         <form onSubmit={handleUpdateSettings} className="glass-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -514,9 +592,17 @@ export default function Dashboard() {
                     const lpd = lastPeriodDate || profile?.lastPeriodDate;
                     if (!lpd) return 'Not set';
                     const avgLen = isSimulating ? Number(cycleLength) : (profile?.averageCycleLength || 28);
-                    const d = new Date(lpd);
-                    d.setDate(d.getDate() + avgLen);
-                    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    
+                    // Parse YYYY-MM-DD explicitly to prevent UTC timezone offsets
+                    const parts = String(lpd).split('T')[0].split('-');
+                    if (parts.length < 3) return lpd;
+                    
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const day = parseInt(parts[2], 10);
+                    
+                    const expectedDate = new Date(year, month, day + avgLen);
+                    return expectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
                   })()}
                 </span>
                 <span style={{ fontSize: '0.74rem', color: 'var(--accent-rose)', fontWeight: '600', marginTop: '2px', display: 'block' }}>
@@ -628,7 +714,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <h3 className="font-headline-md" style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-primary)' }}>Daily Wellness Log</h3>
-                <p className="font-body-md" style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Log your flow, mood &amp; symptoms to update your daily guidance</p>
+                <p className="font-body-md" style={{ margin: 0, fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Log your flow, mood & symptoms to update your daily guidance</p>
               </div>
             </div>
             
@@ -769,7 +855,7 @@ export default function Dashboard() {
             {/* Quick Sleep Direct Input */}
             <div style={{ background: 'var(--bg-primary)', padding: '14px', borderRadius: '16px', border: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <span className="font-label-sm" style={{ fontWeight: 700, color: 'var(--accent-sage)', display: 'block' }}>
-                🌙 Aaj kitne ghante ki sleep li?
+                🌙 Hours of Sleep Logged
               </span>
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <input
@@ -1087,8 +1173,9 @@ export default function Dashboard() {
         className="quick-log-trigger"
         onClick={() => setIsLogOpen(true)}
         aria-label="Open Log Drawer"
+        title="Quick Log Entry"
       >
-        +
+        <span className="material-symbols-outlined" style={{ fontSize: '26px' }}>edit_note</span>
       </button>
 
       {/* Log Modal */}

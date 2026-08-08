@@ -47,6 +47,7 @@ app.post('/api/profile', async (req, res) => {
     const sanitized = {
       ...body,
       name: body.name !== undefined ? String(body.name).trim() : undefined,
+      lastPeriodDate: body.lastPeriodDate !== undefined ? String(body.lastPeriodDate).trim() : undefined,
       averageCycleLength: body.averageCycleLength !== undefined ? Number(body.averageCycleLength) : undefined,
       periodLength: body.periodLength !== undefined ? Number(body.periodLength) : undefined,
     };

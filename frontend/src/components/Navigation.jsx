@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Sparkles, HeartPulse, HelpCircle, Layers, Shield } from 'lucide-react';
+import { LayoutDashboard, Calendar, Sparkles, HeartPulse, HelpCircle, Layers, Shield, Bot } from 'lucide-react';
 import styles from './Navigation.module.css';
 
 export default function Navigation() {
@@ -32,6 +32,7 @@ export default function Navigation() {
 
   const appNavItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'AI Assistant', path: '/chatbot', icon: Bot },
     { name: 'Tracker', path: '/calendar', icon: Calendar },
     { name: 'Insights', path: '/insights', icon: Sparkles },
     { name: 'Wellness', path: '/wellness', icon: HeartPulse },
