@@ -29,6 +29,8 @@ export default function Dashboard() {
   
   // Profile Settings State
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [whatsappAlertsEnabled, setWhatsappAlertsEnabled] = useState(true);
   const [lastPeriodDate, setLastPeriodDate] = useState('');
   const [cycleLength, setCycleLength] = useState(28);
   const [periodLength, setPeriodLength] = useState(5);
@@ -65,6 +67,8 @@ export default function Dashboard() {
 
       if (json.profile) {
         setName(localUserName || json.profile.name || '');
+        setPhone(json.profile.phone || '');
+        setWhatsappAlertsEnabled(json.profile.whatsappAlertsEnabled !== undefined ? json.profile.whatsappAlertsEnabled : true);
         setLastPeriodDate(json.profile.lastPeriodDate || '');
         setCycleLength(json.profile.averageCycleLength || 28);
         setPeriodLength(json.profile.periodLength || 5);
@@ -193,6 +197,8 @@ export default function Dashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name,
+          phone,
+          whatsappAlertsEnabled,
           lastPeriodDate,
           averageCycleLength: Number(cycleLength),
           periodLength: Number(periodLength),
@@ -476,6 +482,30 @@ export default function Dashboard() {
               required
               style={{ padding: '10px 14px', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.8)', border: '1px solid var(--card-border)', color: 'var(--text-primary)', fontFamily: 'inherit' }}
             />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label className="font-label-sm" style={{ color: 'var(--text-secondary)' }}>WHATSAPP PHONE NUMBER (FOR 2-DAYS-BEFORE ALERTS)</label>
+            <input 
+              type="tel" 
+              value={phone} 
+              onChange={e => setPhone(e.target.value)} 
+              placeholder="e.g. +91 9876543210"
+              style={{ padding: '10px 14px', borderRadius: '10px', background: 'rgba(255, 255, 255, 0.8)', border: '1px solid var(--card-border)', color: 'var(--text-primary)', fontFamily: 'inherit' }}
+            />
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 0' }}>
+            <input 
+              type="checkbox" 
+              id="whatsappAlertsToggle"
+              checked={whatsappAlertsEnabled} 
+              onChange={e => setWhatsappAlertsEnabled(e.target.checked)} 
+              style={{ width: '18px', height: '18px', accentColor: 'var(--accent-rose)', cursor: 'pointer' }}
+            />
+            <label htmlFor="whatsappAlertsToggle" style={{ fontSize: '0.86rem', color: 'var(--text-primary)', fontWeight: 600, cursor: 'pointer' }}>
+              Receive Automated WhatsApp Care Alerts (2 Days Before Period)
+            </label>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>

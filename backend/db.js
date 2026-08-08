@@ -27,6 +27,8 @@ export async function updateProfile(newProfile) {
   const existing = await Profile.findOne();
   if (existing) {
     if (newProfile.name !== undefined) existing.name = newProfile.name;
+    if (newProfile.phone !== undefined) existing.phone = newProfile.phone;
+    if (newProfile.whatsappAlertsEnabled !== undefined) existing.whatsappAlertsEnabled = newProfile.whatsappAlertsEnabled;
     if (newProfile.lastPeriodDate !== undefined) existing.lastPeriodDate = newProfile.lastPeriodDate;
     if (newProfile.averageCycleLength !== undefined) existing.averageCycleLength = newProfile.averageCycleLength;
     if (newProfile.periodLength !== undefined) existing.periodLength = newProfile.periodLength;

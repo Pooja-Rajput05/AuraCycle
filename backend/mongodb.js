@@ -37,6 +37,8 @@ export async function connectToDatabase() {
 // Profile Schema definition
 const ProfileSchema = new mongoose.Schema({
   name: { type: String, default: 'Sarah' },
+  phone: { type: String, default: '' },
+  whatsappAlertsEnabled: { type: Boolean, default: true },
   lastPeriodDate: { type: String, default: () => new Date().toISOString().split('T')[0] },
   averageCycleLength: { type: Number, default: 28 },
   periodLength: { type: Number, default: 5 }
